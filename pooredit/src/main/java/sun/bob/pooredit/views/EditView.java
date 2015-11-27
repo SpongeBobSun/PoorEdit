@@ -1,6 +1,7 @@
 package sun.bob.pooredit.views;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.util.AttributeSet;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
@@ -23,6 +24,25 @@ public class EditView extends LinearLayout {
 
     private void initUI(){
         this.setOrientation(VERTICAL);
+        append(new Text(getContext()));
+        append(new Text(getContext()));
+        append(new Text(getContext()));
+        append(new Text(getContext()));
+        append(new Text(getContext()));
+        append(new Text(getContext()));
+        append(new Text(getContext()));
+        append(new Text(getContext()));
+        append(new Text(getContext()));
+        append(new Text(getContext()));
+        append(new Text(getContext()));
+        append(new Text(getContext()));
+        append(new Text(getContext()));
+        append(new Text(getContext()));
+        append(new Text(getContext()));
+        append(new Text(getContext()));
+        append(new Text(getContext()));
+        append(new Text(getContext()));
+        append(new Text(getContext()));
         append(new Text(getContext()));
     }
 

@@ -2,15 +2,11 @@ package sun.bob.pooredit.views;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.Typeface;
-import android.hardware.input.InputManager;
-import android.text.Html;
 import android.util.AttributeSet;
 import android.view.Gravity;
-import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
 import sun.bob.pooredit.beans.ElementBean;
@@ -25,6 +21,8 @@ public class Text extends BaseContainer{
     private boolean bold = false;
     private boolean italic = false;
     private int color;
+    private int background;
+    private boolean underline;
 
     public Text(Context context) {
         super(context);
@@ -38,7 +36,6 @@ public class Text extends BaseContainer{
     public void initUI() {
         baseText = new BaseText(getContext());
         LayoutParams layoutParams = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-        layoutParams.setMargins(10, 10, 10, 10);
         baseText.setLayoutParams(layoutParams);
         baseText.setBackgroundColor(Color.WHITE);
         this.addView(baseText);
@@ -70,9 +67,31 @@ public class Text extends BaseContainer{
         return this;
     }
 
+    public Text setUnderline(boolean underline) {
+        this.underline = underline;
+        baseText.setPaintFlags(Paint.UNDERLINE_TEXT_FLAG);
+        return this;
+    }
+
+    public Text setColor(int color) {
+        this.color = color;
+        baseText.setTextColor(color);
+        return this;
+    }
+
+    public Text setBackground(int background) {
+        this.background = background;
+        baseText.setBackgroundColor(color);
+        return this;
+    }
+
     @Override
     public Object getJsonBean() {
-        return new TextBean().setText(baseText.getText().toString());
+        return new TextBean().setText(baseText.getText().toString())
+                .setBackground(background)
+                .setBold(bold)
+                .setColor(color)
+                .setItalic(italic);
     }
 
     @Override
@@ -98,16 +117,6 @@ public class Text extends BaseContainer{
         private void initUI() {
             this.setBackground(null);
             setGravity(Gravity.LEFT | Gravity.TOP);
-            this.setOnFocusChangeListener(new OnFocusChangeListener() {
-                @Override
-                public void onFocusChange(View v, boolean hasFocus) {
-                    if (hasFocus) {
-                        Text.this.setBackgroundColor(Color.LTGRAY);
-                    } else {
-                        Text.this.setBackground(null);
-                    }
-                }
-            });
         }
 
     }
@@ -118,6 +127,8 @@ public class Text extends BaseContainer{
 
         private boolean bold;
         private boolean italic;
+        private int color;
+        private int background;
 
         public TextBean(){
             super();
@@ -135,6 +146,42 @@ public class Text extends BaseContainer{
         @Override
         public ElementBean setType() {
             this.type = Constants.TYPE_TEXT;
+            return this;
+        }
+
+        public boolean isBold() {
+            return bold;
+        }
+
+        public TextBean setBold(boolean bold) {
+            this.bold = bold;
+            return this;
+        }
+
+        public boolean isItalic() {
+            return italic;
+        }
+
+        public TextBean setItalic(boolean italic) {
+            this.italic = italic;
+            return this;
+        }
+
+        public int getColor() {
+            return color;
+        }
+
+        public TextBean setColor(int color) {
+            this.color = color;
+            return this;
+        }
+
+        public int getBackground() {
+            return background;
+        }
+
+        public TextBean setBackground(int background) {
+            this.background = background;
             return this;
         }
     }

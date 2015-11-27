@@ -10,6 +10,5 @@ public class Constants {
     public static final int TYPE_REC = 0x53;
     public static final int TYPE_ATT = 0x54;
 
-    public static int eleWidth = 200;
-    public static int eleHeight = 100;
+    public static final int TOOLBAR_SIZE = 30;
 }
