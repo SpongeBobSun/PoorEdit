@@ -11,6 +11,7 @@ import android.widget.LinearLayout;
  */
 public class EditView extends LinearLayout {
 
+    public static BaseContainer editing = null;
     private int currentIndex = 0;
     public EditView(Context context) {
         super(context);

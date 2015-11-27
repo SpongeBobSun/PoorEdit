@@ -2,6 +2,7 @@ package sun.bob.pooredit.views;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
@@ -33,48 +34,103 @@ public class ToolBar extends HorizontalScrollView {
 
         public ToolBarWidget(Context context) {
             super(context);
-            this.addView(new FixSizedImageView(getContext())
-                    .setFunction(FixSizedImageView.BOLD)
+            this.addView(new StyleButton(getContext())
+                    .setFunction(StyleButton.BOLD)
                     .setImage(R.drawable.bold));
-            this.addView(new FixSizedImageView(getContext())
-                    .setFunction(FixSizedImageView.ITALIC)
+            this.addView(new StyleButton(getContext())
+                    .setFunction(StyleButton.ITALIC)
                     .setImage(R.drawable.italic));
-            this.addView(new FixSizedImageView(getContext())
-                    .setFunction(FixSizedImageView.UNDERLINE)
+            this.addView(new StyleButton(getContext())
+                    .setFunction(StyleButton.UNDERLINE)
                     .setImage(R.drawable.underline));
-            this.addView(new FixSizedImageView(getContext())
-                    .setFunction(FixSizedImageView.TODO)
+            this.addView(new StyleButton(getContext())
+                    .setFunction(StyleButton.TODO)
                     .setImage(R.drawable.todo_list));
-            this.addView(new FixSizedImageView(getContext())
-                    .setFunction(FixSizedImageView.IMAGE)
+            this.addView(new StyleButton(getContext())
+                    .setFunction(StyleButton.IMAGE)
                     .setImage(R.drawable.image_file));
-            this.addView(new FixSizedImageView(getContext())
-                    .setFunction(FixSizedImageView.PDF)
+            this.addView(new StyleButton(getContext())
+                    .setFunction(StyleButton.PDF)
                     .setImage(R.drawable.pdf));
         }
     }
 
-    class FixSizedImageView extends ImageView{
+    class StyleButton extends ImageView{
 
         private int function;
+        private boolean on = false;
 
-        public FixSizedImageView(Context context) {
+        public StyleButton(Context context) {
             super(context);
             this.setLayoutParams(new LinearLayout.LayoutParams(Constants.TOOLBAR_SIZE, Constants.TOOLBAR_SIZE));
             this.setMaxHeight(Constants.TOOLBAR_SIZE);
             this.setMaxWidth(Constants.TOOLBAR_SIZE);
+            this.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Text text = (Text) EditView.editing;
+                    if (text == null || !(EditView.editing instanceof Text)){
+                        return;
+                    }
+                    switch (function){
+                        case BOLD:
+                            if (text.getSelection() != null){
+                                if (text.getSelectionStyle() == BOLD){
+                                    text.applySelectionStyle(DEFAULT);
+                                } else {
+                                    text.applySelectionStyle(BOLD);
+                                }
+                            } else {
+                                if (!on) {
+                                    //turn on
+                                    text.setHotBold(true);
+                                    setImageResource(R.drawable.bold_filled);
+                                    on = true;
+                                } else {
+                                    //turn off
+                                    text.setHotBold(false);
+                                    setImageResource(R.drawable.bold);
+                                    on = false;
+                                }
+                            }
+                            break;
+                        case ITALIC:
+                            if (text.getSelection() != null){
+                                if (text.getSelectionStyle() == ITALIC){
+                                    text.applySelectionStyle(DEFAULT);
+                                } else {
+                                    text.applySelectionStyle(ITALIC);
+                                }
+                            } else {
+                                if (!on) {
+                                    //turn on
+                                    text.setHotItalic(true);
+                                    setImageResource(R.drawable.italic_filled);
+                                    on = true;
+                                } else {
+                                    //turn off
+                                    text.setHotItalic(false);
+                                    setImageResource(R.drawable.italic);
+                                    on = false;
+                                }
+                            }
+                            break;
+                        default:
+                            break;
+                    }
+                }
+            });
         }
 
-        public FixSizedImageView setImage(int id){
+        public StyleButton setImage(int id){
             this.setImageResource(id);
             return this;
         }
 
-        public FixSizedImageView setFunction(int function) {
+        public StyleButton setFunction(int function) {
             this.function = function;
             return this;
         }
-
 
         public static final int BOLD = 0x40;
         public static final int ITALIC = 0x41;
@@ -83,5 +139,6 @@ public class ToolBar extends HorizontalScrollView {
         public static final int IMAGE = 0x44;
         public static final int PDF = 0x45;
         public static final int FILE = 0x46;
+        public static final int DEFAULT = 0x47;
     }
 }
