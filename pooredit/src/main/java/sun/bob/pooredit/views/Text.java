@@ -239,6 +239,14 @@ public class Text extends BaseContainer{
             private int changedStyle = ToolBar.StyleButton.DEFAULT;
             private int lastStart = 0, lastEnd = 0;
 
+//            private StyleSpan bold, italic, boldItalic;
+//
+//            public TextChangeListener(){
+//                bold = new StyleSpan(Typeface.BOLD);
+//                italic = new StyleSpan(Typeface.ITALIC);
+//                boldItalic = new StyleSpan(Typeface.BOLD_ITALIC);
+//            }
+
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
             }
@@ -257,37 +265,26 @@ public class Text extends BaseContainer{
                     SpannableString ss = new SpannableString(s);
                     if(bolding && !italicing)
                     {
-                        ss.setSpan(new StyleSpan(Typeface.BOLD), start, s.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                        ss.setSpan(new StyleSpan(Typeface.BOLD), start, start + count, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                         BaseText.this.setText(ss);
                         styled = true;
                         changedStyle = ToolBar.StyleButton.BOLD;
                     }
                     if (italicing && !bolding){
-                        ss.setSpan(new StyleSpan(Typeface.ITALIC), start, s.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                        ss.setSpan(new StyleSpan(Typeface.ITALIC), start, start + count, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                         BaseText.this.setText(ss);
                         styled = true;
                         changedStyle = ToolBar.StyleButton.ITALIC;
                     }
                     if (italicing && bolding){
-                        ss.setSpan(new StyleSpan(Typeface.BOLD_ITALIC), start, s.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                        ss.setSpan(new StyleSpan(Typeface.BOLD_ITALIC), start, start + count, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                         BaseText.this.setText(ss);
                         styled = true;
                         changedStyle = ToolBar.StyleButton.BOLD + ToolBar.StyleButton.ITALIC;
                     }
-                    if (!italicing && !bolding){
-                        ss.setSpan(new StyleSpan(Typeface.NORMAL), start, s.length(),Typeface.NORMAL);
-                        BaseText.this.setText(ss);
-                        styled = false;
-                    }
                     len = start + count;
 
                     if (styled){
-//                        SpanBean sbefore = new SpanBean(start, start + before);
-//                        Integer i = styles.get(sbefore);
-//                        if (i != null && i != 0){
-//                            styles.remove(sbefore);
-//                        }
-//                        styles.put(new SpanBean(start, len), changedStyle);
                         if (lastStart == 0 && lastEnd == 0){
                             lastStart = start;
                             lastEnd = start + count;
