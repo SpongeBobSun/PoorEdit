@@ -50,6 +50,10 @@ public class MainActivity extends AppCompatActivity {
             return true;
         }
 
+        if (id == R.id.action_imp){
+            ((PoorEdit) findViewById(R.id.id_poor_edit)).loadJson("/sdcard/pooredit/debug/");
+        }
+
         return super.onOptionsItemSelected(item);
     }
 }

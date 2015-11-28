@@ -42,6 +42,10 @@ public class PoorEdit extends LinearLayout{
         return poorEditWidget.exportJSON(where);
     }
 
+    public void loadJson(String where){
+        poorEditWidget.loadJson(where);
+    }
+
     class PoorEditWidget extends ScrollView {
         EditView editView;
         public PoorEditWidget(Context context) {
@@ -64,6 +68,10 @@ public class PoorEdit extends LinearLayout{
 
         public String exportJSON(String where){
             return editView.exportJSON(where);
+        }
+
+        public void loadJson(String where){
+            editView.loadJson(where);
         }
     }
 }

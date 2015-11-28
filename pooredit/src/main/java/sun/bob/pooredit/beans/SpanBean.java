@@ -11,6 +11,10 @@ public class SpanBean implements Comparable {
         this.end = end;
     }
 
+    public int getStart() {
+        return start;
+    }
+
     @Override
     public int compareTo(Object another) {
         SpanBean other = (SpanBean) another;

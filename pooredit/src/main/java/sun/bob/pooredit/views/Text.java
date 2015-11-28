@@ -147,6 +147,7 @@ public class Text extends BaseContainer{
             return new TextBean().setText(baseText.getText().toString())
                     .setBackground(background)
                     .setColor(color)
+                    .setLength(baseText.length())
                     .setSpans(styles)
                     .setStyles(styles);
         } catch (IllegalAccessException e) {
@@ -155,12 +156,13 @@ public class Text extends BaseContainer{
         return null;
     }
 
+
     @Override
     public boolean isEmpty() {
         return baseText.getText().length() == 0;
     }
 
-    public void setText(String text){
+    public void setText(CharSequence text){
         baseText.setText(text);
     }
 
@@ -239,24 +241,16 @@ public class Text extends BaseContainer{
             private int changedStyle = ToolBar.StyleButton.DEFAULT;
             private int lastStart = 0, lastEnd = 0;
 
-//            private StyleSpan bold, italic, boldItalic;
-//
-//            public TextChangeListener(){
-//                bold = new StyleSpan(Typeface.BOLD);
-//                italic = new StyleSpan(Typeface.ITALIC);
-//                boldItalic = new StyleSpan(Typeface.BOLD_ITALIC);
-//            }
-
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
             }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                Log.e("s:",  s.toString());
-                Log.e("start:", "" +start);
-                Log.e("before:", "" + before);
-                Log.e("count:", "" + count);
+//                Log.e("s:",  s.toString());
+//                Log.e("start:", "" +start);
+//                Log.e("before:", "" + before);
+//                Log.e("count:", "" + count);
 
                 if(charCount != BaseText.this.length())
                 {
@@ -295,9 +289,11 @@ public class Text extends BaseContainer{
                             lastEnd += 1;
                             return;
                         }
-                        if (start == lastEnd - 1 && before == 1 && count == 0){
+                        if (start == lastEnd - 1 && before - count == 1){
                             //backspace
+                            styles.remove(new SpanBean(lastStart, lastEnd));
                             lastEnd -= 1;
+                            styles.put(new SpanBean(lastStart, lastEnd), changedStyle);
                             return;
                         }
                         if (start != lastEnd && before == 0 && count == 1){
@@ -338,6 +334,7 @@ public class Text extends BaseContainer{
 
         private int color;
         private int background;
+        private long length;
 
         private ArrayList<SpanBean> spans;
         private ArrayList<Integer> styles;
@@ -397,8 +394,13 @@ public class Text extends BaseContainer{
         public TextBean setSpans(HashMap map) {
             spans = new ArrayList<>();
             Iterator iterator = map.keySet().iterator();
+            SpanBean toAdd;
             while (iterator.hasNext()){
-                spans.add((SpanBean) iterator.next());
+                toAdd = (SpanBean) iterator.next();
+                if (toAdd.getStart() >= length){
+                    continue;
+                }
+                spans.add(toAdd);
             }
             Collections.sort(spans);
             return this;
@@ -406,6 +408,15 @@ public class Text extends BaseContainer{
 
         public ArrayList<Integer> getStyles() {
             return styles;
+        }
+
+        public long getLength() {
+            return length;
+        }
+
+        public TextBean setLength(long length) {
+            this.length = length;
+            return this;
         }
     }
 }
