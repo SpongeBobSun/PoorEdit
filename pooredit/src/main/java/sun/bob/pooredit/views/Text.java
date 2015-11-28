@@ -9,6 +9,7 @@ import android.text.Spanned;
 import android.text.TextWatcher;
 import android.text.style.StyleSpan;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,7 +20,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 
-import sun.bob.pooredit.PoorEdit;
 import sun.bob.pooredit.beans.ElementBean;
 import sun.bob.pooredit.beans.SpanBean;
 import sun.bob.pooredit.utils.Constants;
@@ -237,6 +237,7 @@ public class Text extends BaseContainer{
             private int len;
             private boolean styled = false;
             private int changedStyle = ToolBar.StyleButton.DEFAULT;
+            private int lastStart = 0, lastEnd = 0;
 
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -244,6 +245,11 @@ public class Text extends BaseContainer{
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
+                Log.e("s:",  s.toString());
+                Log.e("start:", "" +start);
+                Log.e("before:", "" + before);
+                Log.e("count:", "" + count);
+
                 if(charCount != BaseText.this.length())
                 {
                     styled = false;
@@ -268,14 +274,51 @@ public class Text extends BaseContainer{
                         styled = true;
                         changedStyle = ToolBar.StyleButton.BOLD + ToolBar.StyleButton.ITALIC;
                     }
+                    if (!italicing && !bolding){
+                        ss.setSpan(new StyleSpan(Typeface.NORMAL), start, s.length(),Typeface.NORMAL);
+                        BaseText.this.setText(ss);
+                        styled = false;
+                    }
                     len = start + count;
+
                     if (styled){
-                        SpanBean sbefore = new SpanBean(start, start + before);
-                        Integer i = styles.get(sbefore);
-                        if (i != null && i != 0){
-                            styles.remove(sbefore);
+//                        SpanBean sbefore = new SpanBean(start, start + before);
+//                        Integer i = styles.get(sbefore);
+//                        if (i != null && i != 0){
+//                            styles.remove(sbefore);
+//                        }
+//                        styles.put(new SpanBean(start, len), changedStyle);
+                        if (lastStart == 0 && lastEnd == 0){
+                            lastStart = start;
+                            lastEnd = start + count;
+                            return;
                         }
-                        styles.put(new SpanBean(start, len), changedStyle);
+                        if (start == lastEnd && before == 0 && count == 1){
+                            //append
+                            lastEnd += 1;
+                            return;
+                        }
+                        if (start == lastEnd - 1 && before == 1 && count == 0){
+                            //backspace
+                            lastEnd -= 1;
+                            return;
+                        }
+                        if (start != lastEnd && before == 0 && count == 1){
+                            //insert
+                            lastStart = start;
+                            lastEnd = start + count;
+                            return;
+                        }
+                    } else {
+                        if (lastStart != 0 && lastEnd != 0 && lastStart - lastEnd != 0){
+                            SpanBean sbefore = new SpanBean(lastStart, lastEnd - 1);
+                            Integer i = styles.get(sbefore);
+                            if (i != null && i != 0){
+                                styles.remove(sbefore);
+                            }
+                            styles.put(new SpanBean(lastStart, lastEnd), changedStyle);
+                        }
+                        lastEnd = lastStart = 0;
                     }
                 }
             }
