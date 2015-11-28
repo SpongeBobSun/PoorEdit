@@ -115,6 +115,10 @@ public class ToolBar extends HorizontalScrollView {
                                 }
                             }
                             break;
+                        case IMAGE:
+                            EditView.instance.append(new Image(getContext()));
+                            EditView.instance.append(new Text(getContext()));
+                            break;
                         default:
                             break;
                     }

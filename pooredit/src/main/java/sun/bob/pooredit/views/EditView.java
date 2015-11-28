@@ -30,7 +30,8 @@ import sun.bob.pooredit.utils.Constants;
 public class EditView extends LinearLayout {
 
     public static BaseContainer editing = null;
-    private int currentIndex = 0;
+    protected static EditView instance;
+    public int currentIndex = 0;
     public EditView(Context context) {
         super(context);
         initUI();
@@ -43,26 +44,10 @@ public class EditView extends LinearLayout {
 
     private void initUI(){
         this.setOrientation(VERTICAL);
+        instance = this;
+
         append(new Text(getContext()));
-        append(new Text(getContext()));
-        append(new Text(getContext()));
-        append(new Text(getContext()));
-        append(new Text(getContext()));
-        append(new Text(getContext()));
-        append(new Text(getContext()));
-        append(new Text(getContext()));
-        append(new Text(getContext()));
-        append(new Text(getContext()));
-        append(new Text(getContext()));
-        append(new Text(getContext()));
-        append(new Text(getContext()));
-        append(new Text(getContext()));
-        append(new Text(getContext()));
-        append(new Text(getContext()));
-        append(new Text(getContext()));
-        append(new Text(getContext()));
-        append(new Text(getContext()));
-        append(new Text(getContext()));
+
     }
 
     private Text addTextOn(int index){
@@ -71,7 +56,7 @@ public class EditView extends LinearLayout {
         return text;
     }
 
-    private void append(BaseContainer e){
+    protected void append(BaseContainer e){
         this.addView(e);
         currentIndex++;
     }
@@ -94,7 +79,8 @@ public class EditView extends LinearLayout {
             e = (BaseContainer) getChildAt(i);
             switch (e.getType()){
                 case Constants.TYPE_TEXT:
-                    content.add(((ElementBean)e.getJsonBean()).setIndex(i));
+                    if (!e.isEmpty())
+                        content.add(((ElementBean)e.getJsonBean()).setIndex(i));
                     break;
                 default:
                     break;
