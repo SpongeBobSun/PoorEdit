@@ -9,6 +9,8 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import sun.bob.pooredit.PoorEdit;
+
 public class MainActivity extends AppCompatActivity {
 
     @Override
@@ -43,7 +45,8 @@ public class MainActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_exp) {
+            ((PoorEdit) findViewById(R.id.id_poor_edit)).exportJSON("/sdcard/pooredit/debug/");
             return true;
         }
 

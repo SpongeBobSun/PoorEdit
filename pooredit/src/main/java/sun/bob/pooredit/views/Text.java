@@ -2,7 +2,6 @@ package sun.bob.pooredit.views;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.text.Editable;
 import android.text.SpannableString;
@@ -10,13 +9,19 @@ import android.text.Spanned;
 import android.text.TextWatcher;
 import android.text.style.StyleSpan;
 import android.util.AttributeSet;
-import android.view.ActionMode;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
+
+import sun.bob.pooredit.PoorEdit;
 import sun.bob.pooredit.beans.ElementBean;
+import sun.bob.pooredit.beans.SpanBean;
 import sun.bob.pooredit.utils.Constants;
 
 /**
@@ -25,18 +30,18 @@ import sun.bob.pooredit.utils.Constants;
 public class Text extends BaseContainer{
 
     private BaseText baseText;
-    private boolean bold = false;
-    private boolean italic = false;
     private int color;
     private int background;
     private boolean underline;
 
-    private boolean hotBold = false;
-    private boolean hotItalic = false;
+    private boolean bolding = false;
+    private boolean italicing = false;
 
     private String selection;
     private int sStart = -2, sEnd = -2;
     private int selectionStyle = -1;
+
+    private HashMap<SpanBean, Integer> styles;
 
     public Text(Context context) {
         super(context);
@@ -53,59 +58,13 @@ public class Text extends BaseContainer{
         baseText.setLayoutParams(layoutParams);
         baseText.setBackgroundColor(Color.WHITE);
         this.addView(baseText);
+        styles = new HashMap<>();
     }
 
 
     @Override
     protected void setType() {
         this.type = Constants.TYPE_TEXT;
-    }
-
-    public Text setBold(boolean bold) {
-        this.bold = bold;
-        if (italic && bold){
-            baseText.setTypeface(Typeface.DEFAULT, Typeface.BOLD_ITALIC);
-        } else {
-            if (italic){
-                baseText.setTypeface(Typeface.DEFAULT, Typeface.ITALIC);
-            }
-            if (!bold && !italic){
-                baseText.setTypeface(Typeface.DEFAULT);
-            }
-            if (bold){
-                baseText.setTypeface(Typeface.DEFAULT, Typeface.BOLD);
-            }
-        }
-        return this;
-    }
-
-    public Text setItalic(boolean italic) {
-        this.italic = italic;
-        if (bold && italic){
-            baseText.setTypeface(Typeface.DEFAULT, Typeface.BOLD_ITALIC);
-        } else {
-            if (bold){
-                baseText.setTypeface(Typeface.DEFAULT, Typeface.BOLD);
-            }
-            if (!italic && !bold){
-                baseText.setTypeface(Typeface.DEFAULT);
-            }
-            if (italic){
-                baseText.setTypeface(Typeface.DEFAULT, Typeface.ITALIC);
-            }
-        }
-        return this;
-    }
-
-    public Text setUnderline(boolean underline) {
-        this.underline = underline;
-        if (underline){
-            baseText.setPaintFlags(Paint.UNDERLINE_TEXT_FLAG);
-        } else {
-            // TODO: 15/11/27 Is this correct?
-            baseText.setPaintFlags(~Paint.UNDERLINE_TEXT_FLAG);
-        }
-        return this;
     }
 
     public Text setColor(int color) {
@@ -120,21 +79,21 @@ public class Text extends BaseContainer{
         return this;
     }
 
-    public boolean isHotBold() {
-        return hotBold;
+    public boolean isBolding() {
+        return bolding;
     }
 
-    public Text setHotBold(boolean hotBold) {
-        this.hotBold = hotBold;
+    public Text setBolding(boolean bolding) {
+        this.bolding = bolding;
         return this;
     }
 
-    public boolean isHotItalic() {
-        return hotItalic;
+    public boolean isItalicing() {
+        return italicing;
     }
 
-    public Text setHotItalic(boolean hotItalic) {
-        this.hotItalic = hotItalic;
+    public Text setItalicing(boolean italicing) {
+        this.italicing = italicing;
         return this;
     }
 
@@ -151,30 +110,49 @@ public class Text extends BaseContainer{
             selection = null;
             return this;
         }
+        boolean invalide = false;
         switch (style){
             case ToolBar.StyleButton.BOLD:
                 baseText.getText().setSpan(new StyleSpan(Typeface.BOLD), sStart, sEnd, Typeface.BOLD);
                 selectionStyle = ToolBar.StyleButton.BOLD;
+
                 break;
             case ToolBar.StyleButton.ITALIC:
                 baseText.getText().setSpan(new StyleSpan(Typeface.ITALIC), sStart, sEnd, Typeface.ITALIC);
                 selectionStyle = ToolBar.StyleButton.ITALIC;
                 break;
             case ToolBar.StyleButton.DEFAULT:
-                baseText.getText().setSpan(new StyleSpan(Typeface.DEFAULT.getStyle()), sStart, sEnd, Typeface.DEFAULT.getStyle());
+                baseText.getText().setSpan(null, sStart, sEnd, 0);
                 selectionStyle = ToolBar.StyleButton.DEFAULT;
                 break;
+            default:
+                invalide = true;
+        }
+        if (!invalide){
+            SpanBean sb = new SpanBean(sStart, sEnd);
+            Integer s = styles.get(sb);
+            if (s == null || s == 0){
+                styles.put(sb, style);
+            } else {
+                styles.remove(sb);
+                styles.put(sb, style);
+            }
         }
         return this;
     }
 
     @Override
     public Object getJsonBean() {
-        return new TextBean().setText(baseText.getText().toString())
-                .setBackground(background)
-                .setBold(bold)
-                .setColor(color)
-                .setItalic(italic);
+        try {
+            return new TextBean().setText(baseText.getText().toString())
+                    .setBackground(background)
+                    .setColor(color)
+                    .setSpans(styles)
+                    .setStyles(styles);
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     @Override
@@ -233,7 +211,7 @@ public class Text extends BaseContainer{
                 }
             }
             if (hasBoth){
-                selectionStyle = ToolBar.StyleButton.BOLD | ToolBar.StyleButton.ITALIC;
+                selectionStyle = ToolBar.StyleButton.BOLD + ToolBar.StyleButton.ITALIC;
             }
             if (hasBold){
                 selectionStyle = ToolBar.StyleButton.BOLD;
@@ -241,46 +219,74 @@ public class Text extends BaseContainer{
             if (hasItalic){
                 selectionStyle = ToolBar.StyleButton.ITALIC;
             }
-            selection = String.valueOf(getText().subSequence(start, end));
+            try {
+                selection = String.valueOf(getText().subSequence(start, end));
+            } catch (IndexOutOfBoundsException e){
+                selection = null;
+                sStart = -2;
+                sEnd = -2;
+                return;
+            }
             sStart = start;
             sEnd = end;
         }
 
-
         class TextChangeListener implements TextWatcher{
 
             private int charCount = 0;
+            private int len;
+            private boolean styled = false;
+            private int changedStyle = ToolBar.StyleButton.DEFAULT;
 
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
             }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if(charCount!=BaseText.this.length())
+                if(charCount != BaseText.this.length())
                 {
+                    styled = false;
                     charCount = BaseText.this.length();
                     SpannableString ss = new SpannableString(s);
-                    if(hotBold && !hotItalic)
+                    if(bolding && !italicing)
                     {
                         ss.setSpan(new StyleSpan(Typeface.BOLD), start, s.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                         BaseText.this.setText(ss);
+                        styled = true;
+                        changedStyle = ToolBar.StyleButton.BOLD;
                     }
-                    if (hotItalic && !hotBold){
+                    if (italicing && !bolding){
                         ss.setSpan(new StyleSpan(Typeface.ITALIC), start, s.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                         BaseText.this.setText(ss);
+                        styled = true;
+                        changedStyle = ToolBar.StyleButton.ITALIC;
                     }
-                    if (hotItalic && hotBold){
+                    if (italicing && bolding){
                         ss.setSpan(new StyleSpan(Typeface.BOLD_ITALIC), start, s.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                         BaseText.this.setText(ss);
+                        styled = true;
+                        changedStyle = ToolBar.StyleButton.BOLD + ToolBar.StyleButton.ITALIC;
+                    }
+                    len = start + count;
+                    if (styled){
+                        SpanBean sbefore = new SpanBean(start, start + before);
+                        Integer i = styles.get(sbefore);
+                        if (i != null && i != 0){
+                            styles.remove(sbefore);
+                        }
+                        styles.put(new SpanBean(start, len), changedStyle);
                     }
                 }
             }
 
             @Override
             public void afterTextChanged(Editable s) {
-                setSelection(s.length());
+                if (s.length() > len){
+                    setSelection(len);
+                } else {
+                    setSelection(s.length());
+                }
             }
         }
 
@@ -290,10 +296,11 @@ public class Text extends BaseContainer{
 
         private String text;
 
-        private boolean bold;
-        private boolean italic;
         private int color;
         private int background;
+
+        private ArrayList<SpanBean> spans;
+        private ArrayList<Integer> styles;
 
         public TextBean(){
             super();
@@ -314,24 +321,6 @@ public class Text extends BaseContainer{
             return this;
         }
 
-        public boolean isBold() {
-            return bold;
-        }
-
-        public TextBean setBold(boolean bold) {
-            this.bold = bold;
-            return this;
-        }
-
-        public boolean isItalic() {
-            return italic;
-        }
-
-        public TextBean setItalic(boolean italic) {
-            this.italic = italic;
-            return this;
-        }
-
         public int getColor() {
             return color;
         }
@@ -348,6 +337,35 @@ public class Text extends BaseContainer{
         public TextBean setBackground(int background) {
             this.background = background;
             return this;
+        }
+
+        public TextBean setStyles(HashMap<SpanBean, Integer> map) throws IllegalAccessException {
+            styles = new ArrayList<>();
+            if (this.spans == null){
+                throw new IllegalAccessException("Should call setSpans first!");
+            }
+            for (SpanBean spanBean : this.spans){
+                this.styles.add(map.get(spanBean));
+            }
+            return this;
+        }
+
+        public ArrayList<SpanBean> getSpans() {
+            return spans;
+        }
+
+        public TextBean setSpans(HashMap map) {
+            spans = new ArrayList<>();
+            Iterator iterator = map.keySet().iterator();
+            while (iterator.hasNext()){
+                spans.add((SpanBean) iterator.next());
+            }
+            Collections.sort(spans);
+            return this;
+        }
+
+        public ArrayList<Integer> getStyles() {
+            return styles;
         }
     }
 }

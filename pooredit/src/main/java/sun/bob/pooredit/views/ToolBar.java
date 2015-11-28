@@ -83,12 +83,12 @@ public class ToolBar extends HorizontalScrollView {
                             } else {
                                 if (!on) {
                                     //turn on
-                                    text.setHotBold(true);
+                                    text.setBolding(true);
                                     setImageResource(R.drawable.bold_filled);
                                     on = true;
                                 } else {
                                     //turn off
-                                    text.setHotBold(false);
+                                    text.setBolding(false);
                                     setImageResource(R.drawable.bold);
                                     on = false;
                                 }
@@ -104,12 +104,12 @@ public class ToolBar extends HorizontalScrollView {
                             } else {
                                 if (!on) {
                                     //turn on
-                                    text.setHotItalic(true);
+                                    text.setItalicing(true);
                                     setImageResource(R.drawable.italic_filled);
                                     on = true;
                                 } else {
                                     //turn off
-                                    text.setHotItalic(false);
+                                    text.setItalicing(false);
                                     setImageResource(R.drawable.italic);
                                     on = false;
                                 }
