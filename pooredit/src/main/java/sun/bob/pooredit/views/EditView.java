@@ -63,6 +63,12 @@ public class EditView extends LinearLayout {
         return image;
     }
 
+    private Todo addTodoOn(int index){
+        Todo todo = new Todo(getContext());
+        this.addView(todo);
+        return todo;
+    }
+
     protected void append(BaseContainer e){
         this.addView(e);
         currentIndex++;
@@ -98,6 +104,13 @@ public class EditView extends LinearLayout {
                         content.add(((ElementBean)e.getJsonBean()).setIndex(i - empty));
                     } else {
                         empty++;
+                    }
+                    break;
+                case Constants.TYPE_TODO:
+                    if (!e.isEmpty()) {
+                        content.add(((ElementBean) e.getJsonBean()).setIndex(i - empty));
+                    } else {
+                        empty ++;
                     }
                     break;
                 default:
@@ -189,6 +202,37 @@ public class EditView extends LinearLayout {
                 case Constants.TYPE_IMAGE:
                     Image img = addImageOn((int) Math.round((Double) bean.get("index")));
                     img.setImage((String) bean.get("imgPath"),(int) Math.round((Double) bean.get("width")) );
+                    break;
+                case Constants.TYPE_TODO:
+                    Todo todo = addTodoOn((int) Math.round((Double) bean.get("index")));
+                    SpannableString ssTodo = new SpannableString((String) bean.get("text"));
+                    int lenTodo = ssTodo.length();
+                    ArrayList<LinkedTreeMap> spansTodo = (ArrayList) bean.get("spans");
+                    ArrayList stylesTodo = (ArrayList<Integer>) bean.get("styles");
+                    int st, et;
+                    for (int i = 0; i < stylesTodo.size(); i++){
+                        int style = (int) Math.round((Double)stylesTodo.get(i));
+                        st = (int) Math.round((Double) spansTodo.get(i).get("start"));
+                        et = (int) Math.round((Double) spansTodo.get(i).get("end"));
+                        if (st >= lenTodo || et >= lenTodo){
+                            continue;
+                        }
+                        switch (style){
+                            case ToolBar.StyleButton.BOLD:
+                                ssTodo.setSpan(new StyleSpan(Typeface.BOLD), st, et, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                                break;
+                            case ToolBar.StyleButton.ITALIC:
+                                ssTodo.setSpan(new StyleSpan(Typeface.ITALIC), st, et, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                                break;
+                            case ToolBar.StyleButton.BOLD + ToolBar.StyleButton.ITALIC:
+                                ssTodo.setSpan(new StyleSpan(Typeface.BOLD_ITALIC), st, et, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                    todo.setText(ssTodo);
+                    todo.setChecked((Boolean) bean.get("checked"));
                     break;
                 default:
                     break;

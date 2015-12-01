@@ -30,9 +30,9 @@ import sun.bob.pooredit.utils.Constants;
  */
 public class Text extends BaseContainer{
 
-    private BaseText baseText;
-    private int color;
-    private int background;
+    protected BaseText baseText;
+    protected int color;
+    protected int background;
     private boolean underline;
 
     private boolean bolding = false;
@@ -42,7 +42,7 @@ public class Text extends BaseContainer{
     private int sStart = -2, sEnd = -2;
     private int selectionStyle = -1;
 
-    private HashMap<SpanBean, Integer> styles;
+    protected HashMap<SpanBean, Integer> styles;
 
     public Text(Context context) {
         super(context);
