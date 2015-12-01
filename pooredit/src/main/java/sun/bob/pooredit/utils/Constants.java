@@ -13,4 +13,5 @@ public class Constants {
     public static final int TOOLBAR_SIZE = 30;
 
     public static final int REQ_PICK_IMAGE = 0x90;
+    public static final int REQ_PICK_FILE = 0x91;
 }

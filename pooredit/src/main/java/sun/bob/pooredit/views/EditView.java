@@ -65,10 +65,17 @@ public class EditView extends LinearLayout {
 
     private Todo addTodoOn(int index){
         Todo todo = new Todo(getContext());
-        this.addView(todo);
+        this.addView(todo, index);
+        this.addView(new Text(getContext()));
         return todo;
     }
 
+    private sun.bob.pooredit.views.File addFileOn(int index){
+        sun.bob.pooredit.views.File file = new sun.bob.pooredit.views.File(getContext());
+        this.addView(file, index);
+        this.addView(new Text(getContext()));
+        return file;
+    }
     protected void append(BaseContainer e){
         this.addView(e);
         currentIndex++;
@@ -107,6 +114,13 @@ public class EditView extends LinearLayout {
                     }
                     break;
                 case Constants.TYPE_TODO:
+                    if (!e.isEmpty()) {
+                        content.add(((ElementBean) e.getJsonBean()).setIndex(i - empty));
+                    } else {
+                        empty ++;
+                    }
+                    break;
+                case Constants.TYPE_ATT:
                     if (!e.isEmpty()) {
                         content.add(((ElementBean) e.getJsonBean()).setIndex(i - empty));
                     } else {
@@ -233,6 +247,10 @@ public class EditView extends LinearLayout {
                     }
                     todo.setText(ssTodo);
                     todo.setChecked((Boolean) bean.get("checked"));
+                    break;
+                case Constants.TYPE_ATT:
+                    sun.bob.pooredit.views.File fileView = addFileOn((int) Math.round((Double) bean.get("index")));
+                    fileView.setFilePath((String) bean.get("filePath"));
                     break;
                 default:
                     break;

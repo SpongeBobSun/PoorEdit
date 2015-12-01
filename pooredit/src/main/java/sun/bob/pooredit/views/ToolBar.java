@@ -52,6 +52,9 @@ public class ToolBar extends HorizontalScrollView {
             this.addView(new StyleButton(getContext())
                     .setFunction(StyleButton.PDF)
                     .setImage(R.drawable.pdf));
+            this.addView(new StyleButton(getContext())
+                    .setFunction(StyleButton.FILE)
+                    .setImage(R.drawable.file));
         }
     }
 
@@ -121,6 +124,9 @@ public class ToolBar extends HorizontalScrollView {
                             break;
                         case TODO:
                             EditView.instance.append(new Todo(getContext()));
+                            break;
+                        case FILE:
+                            EditView.instance.append(new File(getContext()));
                             break;
                         default:
                             break;

@@ -18,6 +18,7 @@ import android.widget.ScrollView;
 import sun.bob.pooredit.utils.Constants;
 import sun.bob.pooredit.views.BaseContainer;
 import sun.bob.pooredit.views.EditView;
+import sun.bob.pooredit.views.File;
 import sun.bob.pooredit.views.Image;
 import sun.bob.pooredit.views.ToolBar;
 
@@ -96,7 +97,6 @@ public class PoorEdit extends LinearLayout{
         }
         switch (requestCode){
             case Constants.REQ_PICK_IMAGE:
-                // TODO: 15/12/1 Set Corresponding data to containers.
                 Uri selectedImage = data.getData();
                 String[] filePathColumn = { MediaStore.Images.Media.DATA };
 
@@ -108,6 +108,10 @@ public class PoorEdit extends LinearLayout{
                 String picPath = cursor.getString(columnIndex);
                 cursor.close();
                 ((Image) picking).setImage(picPath, 0);
+                break;
+            case Constants.REQ_PICK_FILE:
+                Uri selectedFile = data.getData();
+                ((File) picking).setFilePath(selectedFile.getPath());
                 break;
             default:
                 break;
