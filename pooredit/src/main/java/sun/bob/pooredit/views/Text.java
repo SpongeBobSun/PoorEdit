@@ -9,10 +9,11 @@ import android.text.Spanned;
 import android.text.TextWatcher;
 import android.text.style.StyleSpan;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
 import java.util.ArrayList;
@@ -240,6 +241,11 @@ public class Text extends BaseContainer{
             private boolean styled = false;
             private int changedStyle = ToolBar.StyleButton.DEFAULT;
             private int lastStart = 0, lastEnd = 0;
+            InputMethodManager inputMethodManager;
+
+            public TextChangeListener(){
+                inputMethodManager = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+            }
 
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -260,19 +266,19 @@ public class Text extends BaseContainer{
                     if(bolding && !italicing)
                     {
                         ss.setSpan(new StyleSpan(Typeface.BOLD), start, start + count, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                        BaseText.this.setText(ss);
+                        BaseText.this.getEditableText().replace(0, s.length(), ss);
                         styled = true;
                         changedStyle = ToolBar.StyleButton.BOLD;
                     }
                     if (italicing && !bolding){
                         ss.setSpan(new StyleSpan(Typeface.ITALIC), start, start + count, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                        BaseText.this.setText(ss);
+                        BaseText.this.getEditableText().replace(0, s.length(), ss);
                         styled = true;
                         changedStyle = ToolBar.StyleButton.ITALIC;
                     }
                     if (italicing && bolding){
                         ss.setSpan(new StyleSpan(Typeface.BOLD_ITALIC), start, start + count, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                        BaseText.this.setText(ss);
+                        BaseText.this.getEditableText().replace(0, s.length(), ss);
                         styled = true;
                         changedStyle = ToolBar.StyleButton.BOLD + ToolBar.StyleButton.ITALIC;
                     }

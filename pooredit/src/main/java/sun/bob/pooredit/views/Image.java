@@ -1,12 +1,16 @@
 package sun.bob.pooredit.views;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.util.AttributeSet;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
+import sun.bob.pooredit.PoorEdit;
 import sun.bob.pooredit.R;
 import sun.bob.pooredit.utils.Constants;
 
@@ -31,7 +35,16 @@ public class Image extends BaseContainer {
         this.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         this.addView(baseImage);
         baseImage.setImageResource(R.drawable.image_file);
-        // TODO: 15/11/28 OnClickListener
+        this.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(
+                        Intent.ACTION_PICK,
+                        android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                ((Activity) getContext()).startActivityForResult(i, Constants.REQ_PICK_IMAGE);
+                PoorEdit.picking = Image.this;
+            }
+        });
     }
 
     public Image setImage(String image){

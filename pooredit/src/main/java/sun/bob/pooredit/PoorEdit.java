@@ -2,6 +2,8 @@ package sun.bob.pooredit;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.Color;
 import android.util.AttributeSet;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -10,6 +12,7 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 
+import sun.bob.pooredit.utils.Constants;
 import sun.bob.pooredit.views.BaseContainer;
 import sun.bob.pooredit.views.EditView;
 import sun.bob.pooredit.views.ToolBar;
@@ -21,6 +24,7 @@ import sun.bob.pooredit.views.ToolBar;
 public class PoorEdit extends LinearLayout{
 
     PoorEditWidget poorEditWidget;
+    public static BaseContainer picking;
     public PoorEdit(Context context) {
         super(context);
         initUI();
@@ -36,6 +40,7 @@ public class PoorEdit extends LinearLayout{
         poorEditWidget = new PoorEditWidget(getContext());
         this.addView(poorEditWidget);
         this.addView(new ToolBar(getContext()));
+        this.setBackgroundColor(Color.WHITE);
     }
 
     public String exportJSON(String where){
@@ -72,6 +77,22 @@ public class PoorEdit extends LinearLayout{
 
         public void loadJson(String where){
             editView.loadJson(where);
+        }
+    }
+
+    public void onActivityResult(int requestCode, int resultCode, Intent data){
+        if (picking == null){
+            return;
+        }
+        if (resultCode != Activity.RESULT_CANCELED){
+            return;
+        }
+        switch (requestCode){
+            case Constants.REQ_PICK_IMAGE:
+                // TODO: 15/12/1 Set Corresbonding data to containers.
+                break;
+            default:
+                break;
         }
     }
 }
