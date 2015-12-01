@@ -1,5 +1,6 @@
 package sun.bob.pooredittest;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -13,12 +14,16 @@ import sun.bob.pooredit.PoorEdit;
 
 public class MainActivity extends AppCompatActivity {
 
+    private PoorEdit poorEdit;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        poorEdit = (PoorEdit) findViewById(R.id.id_poor_edit);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -55,5 +60,10 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data){
+        poorEdit.onActivityResult(requestCode, resultCode, data);
     }
 }

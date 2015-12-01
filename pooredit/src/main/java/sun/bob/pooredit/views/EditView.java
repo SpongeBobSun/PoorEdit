@@ -56,6 +56,13 @@ public class EditView extends LinearLayout {
         return text;
     }
 
+    private Image addImageOn(int index){
+        Image image = new Image(getContext());
+        this.addView(image, index);
+        this.addView(new Text(getContext()));
+        return image;
+    }
+
     protected void append(BaseContainer e){
         this.addView(e);
         currentIndex++;
@@ -75,12 +82,23 @@ public class EditView extends LinearLayout {
         ArrayList<Object> content = new ArrayList<>();
         Gson gson = new Gson();
         BaseContainer e;
+        int empty = 0;
         for (int i = 0; i < getChildCount(); i++){
             e = (BaseContainer) getChildAt(i);
             switch (e.getType()){
                 case Constants.TYPE_TEXT:
-                    if (!e.isEmpty())
-                        content.add(((ElementBean)e.getJsonBean()).setIndex(i));
+                    if (!e.isEmpty()) {
+                        content.add(((ElementBean) e.getJsonBean()).setIndex(i - empty));
+                    } else {
+                        empty ++;
+                    }
+                    break;
+                case Constants.TYPE_IMAGE:
+                    if (!e.isEmpty()){
+                        content.add(((ElementBean)e.getJsonBean()).setIndex(i - empty));
+                    } else {
+                        empty++;
+                    }
                     break;
                 default:
                     break;
@@ -167,6 +185,10 @@ public class EditView extends LinearLayout {
                     }
                     text.setText(spannableString);
 
+                    break;
+                case Constants.TYPE_IMAGE:
+                    Image img = addImageOn((int) Math.round((Double) bean.get("index")));
+                    img.setImage((String) bean.get("imgPath"),(int) Math.round((Double) bean.get("width")) );
                     break;
                 default:
                     break;

@@ -3,7 +3,10 @@ package sun.bob.pooredit;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Color;
+import android.net.Uri;
+import android.provider.MediaStore;
 import android.util.AttributeSet;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -15,6 +18,7 @@ import android.widget.ScrollView;
 import sun.bob.pooredit.utils.Constants;
 import sun.bob.pooredit.views.BaseContainer;
 import sun.bob.pooredit.views.EditView;
+import sun.bob.pooredit.views.Image;
 import sun.bob.pooredit.views.ToolBar;
 
 /**
@@ -84,12 +88,26 @@ public class PoorEdit extends LinearLayout{
         if (picking == null){
             return;
         }
-        if (resultCode != Activity.RESULT_CANCELED){
+        if (resultCode != Activity.RESULT_OK){
+            return;
+        }
+        if (data == null){
             return;
         }
         switch (requestCode){
             case Constants.REQ_PICK_IMAGE:
-                // TODO: 15/12/1 Set Corresbonding data to containers.
+                // TODO: 15/12/1 Set Corresponding data to containers.
+                Uri selectedImage = data.getData();
+                String[] filePathColumn = { MediaStore.Images.Media.DATA };
+
+                Cursor cursor = getContext().getContentResolver().query(selectedImage,
+                        filePathColumn, null, null, null);
+                cursor.moveToFirst();
+
+                int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+                String picPath = cursor.getString(columnIndex);
+                cursor.close();
+                ((Image) picking).setImage(picPath, 0);
                 break;
             default:
                 break;
