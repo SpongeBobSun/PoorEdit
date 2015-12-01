@@ -10,6 +10,7 @@ import android.text.TextWatcher;
 import android.text.style.StyleSpan;
 import android.util.AttributeSet;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
@@ -192,6 +193,18 @@ public class Text extends BaseContainer{
             this.addTextChangedListener(new TextChangeListener());
         }
 
+        @Override
+        public boolean dispatchKeyEventPreIme(KeyEvent key){
+            switch (key.getKeyCode()){
+                case KeyEvent.KEYCODE_BACK:
+                    // TODO: 15/12/1 Delete previous view here. Maybe give an alert dialog.
+                    break;
+                case KeyEvent.KEYCODE_ENTER:
+                    // TODO: 15/12/1 For Todos and Lists, add a new line here and DO NOT let EditText break line.
+                    break;
+            }
+            return super.dispatchKeyEvent(key);
+        }
         @Override
         public void onSelectionChanged(int start, int end){
             if (start == end){
