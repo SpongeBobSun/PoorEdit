@@ -176,6 +176,11 @@ public class Text extends BaseContainer{
         return baseText.getText().length() == 0;
     }
 
+    @Override
+    public void focus() {
+        baseText.requestFocus();
+    }
+
     public void setText(CharSequence text){
         baseText.setText(text);
     }

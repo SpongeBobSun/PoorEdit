@@ -14,11 +14,11 @@ public class Dot extends Drawable {
     private Paint paint;
     public Dot(){
         paint = new Paint();
-        paint.setColor(Color.LTGRAY);
+        paint.setColor(Color.BLACK);
     }
     @Override
     public void draw(Canvas canvas) {
-        canvas.drawCircle(canvas.getWidth() / 2, canvas.getHeight() / 2, canvas.getHeight() / 2, paint);
+        canvas.drawCircle(canvas.getWidth() / 2, canvas.getHeight() / 2, 10, paint);
     }
 
     @Override

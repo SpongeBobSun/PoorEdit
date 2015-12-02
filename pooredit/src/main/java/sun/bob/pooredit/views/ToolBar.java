@@ -40,6 +40,7 @@ public class ToolBar extends HorizontalScrollView {
             this.addView(new StyleButton(getContext())
                     .setFunction(StyleButton.ITALIC)
                     .setImage(R.drawable.italic));
+
             // TODO: 15/12/2 Implement Underline.
 //            this.addView(new StyleButton(getContext())
 //                    .setFunction(StyleButton.UNDERLINE)
@@ -47,6 +48,9 @@ public class ToolBar extends HorizontalScrollView {
             this.addView(new StyleButton(getContext())
                     .setFunction(StyleButton.TODO)
                     .setImage(R.drawable.todo_list));
+            this.addView(new StyleButton(getContext())
+                    .setFunction(StyleButton.ITEM)
+                    .setImage(R.drawable.list));
             this.addView(new StyleButton(getContext())
                     .setFunction(StyleButton.IMAGE)
                     .setImage(R.drawable.image_file));
@@ -132,6 +136,9 @@ public class ToolBar extends HorizontalScrollView {
                         case FILE:
                             EditView.instance.append(new File(getContext()));
                             break;
+                        case ITEM:
+                            EditView.instance.append(new Item(getContext()));
+                            break;
                         default:
                             break;
                     }
@@ -157,6 +164,7 @@ public class ToolBar extends HorizontalScrollView {
         public static final int PDF = 0x45;
         public static final int FILE = 0x46;
         public static final int VOICE = 0x47;
+        public static final int ITEM = 0x48;
         public static final int DEFAULT = 0x10;
     }
 }

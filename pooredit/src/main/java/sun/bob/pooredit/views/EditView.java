@@ -63,26 +63,57 @@ public class EditView extends LinearLayout {
     private Image addImageOn(int index){
         Image image = new Image(getContext());
         this.addView(image, index);
-        this.addView(new Text(getContext()));
+        if (! (getChildAt(getChildCount() - 1) instanceof Text) ){
+            this.addView(new Text(getContext()));
+        }
         return image;
     }
 
     private Todo addTodoOn(int index){
         Todo todo = new Todo(getContext());
         this.addView(todo, index);
-        this.addView(new Text(getContext()));
+        if (! (getChildAt(getChildCount() - 1) instanceof Text) ) {
+            this.addView(new Text(getContext()));
+        }
         todo.focus();
         return todo;
+    }
+
+    private Item addItemOn(int index){
+        Item item = new Item(getContext());
+        this.addView(item, index);
+        if (! (getChildAt(getChildCount() - 1) instanceof Text) ) {
+            this.addView(new Text(getContext()));
+        }
+        item.focus();
+        return item;
     }
 
     private sun.bob.pooredit.views.File addFileOn(int index){
         sun.bob.pooredit.views.File file = new sun.bob.pooredit.views.File(getContext());
         this.addView(file, index);
-        this.addView(new Text(getContext()));
+        if (! (getChildAt(getChildCount() - 1) instanceof Text) ){
+            this.addView(new Text(getContext()));
+        }
         return file;
     }
     protected void append(BaseContainer e){
-        this.addView(e);
+        boolean ensureText = false;
+        if ((! (getChildAt(getChildCount() - 1) instanceof Text)) && getChildCount() > 1){
+            ensureText = true;
+        }
+        if (ensureText){
+            this.addView(e);
+            this.addView(new Text(getContext()));
+        } else {
+            if (getChildCount() > 1){
+                this.addView(e, getChildCount() - 2);
+            } else {
+                this.addView(e);
+                this.addView(new Text(getContext()));
+                e.focus();
+            }
+        }
         currentIndex++;
     }
 
@@ -270,16 +301,16 @@ public class EditView extends LinearLayout {
             if (view.getParent().getParent() instanceof BaseContainer){
                 BaseContainer container = (BaseContainer) view.getParent().getParent();
                 int index = this.indexOfChild(container);
-                if (index < 1){
-                    return;
-                }
-                final BaseContainer toDel = (BaseContainer) this.getChildAt(index - 1);
-                if (container.getType() == Constants.TYPE_TODO && toDel.getType() == Constants.TYPE_TODO){
-                    this.removeView(toDel);
-                } else {
+//                if (index < 1){
+//                    return;
+//                }
+//                final BaseContainer toDel = (BaseContainer) this.getChildAt(index - 1);
+//                if (container.getType() == Constants.TYPE_TODO && toDel.getType() == Constants.TYPE_TODO){
+//                    this.removeView(toDel);
+//                } else {
                     this.removeView((View) view.getParent().getParent());
                     this.addView(new Text(getContext()), index);
-                }
+//                }
                 return;
             }
         } catch (NullPointerException e){
@@ -298,6 +329,10 @@ public class EditView extends LinearLayout {
         }
         if (view.getType() == Constants.TYPE_TEXT && view.isEmpty() && index != getChildCount() - 1){
             removeView(view);
+            return;
+        }
+        if (toDel.getType() == Constants.TYPE_TODO){
+            removeView(toDel);
             return;
         }
         String which = null;

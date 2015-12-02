@@ -9,6 +9,7 @@ public class Constants {
     public static final int TYPE_TODO = 0x52;
     public static final int TYPE_REC = 0x53;
     public static final int TYPE_ATT = 0x54;
+    public static final int TYPE_ITEM = 0x55;
 
     public static final int TOOLBAR_SIZE = 30;
 

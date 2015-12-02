@@ -40,5 +40,6 @@ public abstract class BaseContainer extends FrameLayout {
     abstract protected void setType();
     abstract public Object getJsonBean();
     abstract public boolean isEmpty();
+    abstract public void focus();
 
 }

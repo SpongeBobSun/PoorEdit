@@ -102,6 +102,11 @@ public class File extends BaseContainer {
         return empty;
     }
 
+    @Override
+    public void focus() {
+
+    }
+
     public String getFilePath() {
         return filePath;
     }
@@ -120,6 +125,7 @@ public class File extends BaseContainer {
             }
         });
         empty = false;
+        // TODO: 15/12/2 Change OnClickListener to open file action.
         return this;
     }
 

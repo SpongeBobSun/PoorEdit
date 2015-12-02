@@ -112,6 +112,11 @@ public class Image extends BaseContainer {
         return empty;
     }
 
+    @Override
+    public void focus() {
+
+    }
+
     interface ImageLoaderItf {
         void loadImage(ImageView imageView, String image, int imageWidth);
     }

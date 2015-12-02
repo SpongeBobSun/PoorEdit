@@ -30,4 +30,9 @@ public class Voice extends BaseContainer {
     public boolean isEmpty() {
         return false;
     }
+
+    @Override
+    public void focus() {
+
+    }
 }
