@@ -43,6 +43,7 @@ public class Text extends BaseContainer{
     private int sStart = -2, sEnd = -2;
     private int selectionStyle = -1;
 
+    boolean isChild = false;
     protected HashMap<SpanBean, Integer> styles;
 
     public Text(Context context) {
@@ -61,9 +62,19 @@ public class Text extends BaseContainer{
         baseText.setBackgroundColor(Color.WHITE);
         this.addView(baseText);
         styles = new HashMap<>();
+        baseText.setHorizontallyScrolling(false);
+        baseText.setSingleLine(false);
         baseText.requestFocus();
     }
 
+    public Text setIsChild(boolean isChild) {
+        this.isChild = isChild;
+        return this;
+    }
+
+    public boolean isChild() {
+        return isChild;
+    }
 
     @Override
     protected void setType() {
@@ -192,25 +203,46 @@ public class Text extends BaseContainer{
                 }
             });
             this.addTextChangedListener(new TextChangeListener());
-            this.setOnKeyListener(new OnKeyListener() {
-                @Override
-                public boolean onKey(View v, int keyCode, KeyEvent event) {
-                    if (event.getAction() == KeyEvent.ACTION_DOWN){
-                        return false;
+//            this.setOnKeyListener(new OnKeyListener() {
+//                @Override
+//                public boolean onKey(View v, int keyCode, KeyEvent event) {
+//                    if (event.getAction() == KeyEvent.ACTION_DOWN) {
+//                        return false;
+//                    }
+//                    switch (keyCode) {
+//                        case KeyEvent.KEYCODE_DEL:
+//                            if (baseText.getSelectionStart() == 0) {
+//                                EditView.instance.requestDelete(Text.this);
+//                            }
+//                            break;
+//                        case KeyEvent.KEYCODE_ENTER:
+//                            // TODO: 15/12/1 For Todos and Lists, add a new line here and DO NOT let EditText break line.
+//                            if (!isChild)
+//                                break;
+//                            EditView.instance.requestNext(Text.this);
+//                            return isChild;
+//                    }
+//                    return false;
+//                }
+//            });
+        }
+
+        @Override
+        public boolean onKeyDown(int keyCode, KeyEvent event){
+            switch (keyCode) {
+                case KeyEvent.KEYCODE_DEL:
+                    if (baseText.getSelectionStart() == 0) {
+                        EditView.instance.requestDelete(Text.this);
                     }
-                    switch (keyCode){
-                        case KeyEvent.KEYCODE_DEL:
-                            if (baseText.getSelectionStart() == 0){
-                                EditView.instance.requestDelete(Text.this);
-                            }
-                            break;
-                        case KeyEvent.KEYCODE_ENTER:
-                            // TODO: 15/12/1 For Todos and Lists, add a new line here and DO NOT let EditText break line.
-                            break;
+                    break;
+                case KeyEvent.KEYCODE_ENTER:
+                    // TODO: 15/12/1 For Todos and Lists, add a new line here and DO NOT let EditText break line.
+                    if (isChild){
+                        EditView.instance.requestNext(Text.this);
+                        return true;
                     }
-                    return false;
-                }
-            });
+            }
+            return super.onKeyDown(keyCode, event);
         }
 
         @Override

@@ -40,9 +40,10 @@ public class ToolBar extends HorizontalScrollView {
             this.addView(new StyleButton(getContext())
                     .setFunction(StyleButton.ITALIC)
                     .setImage(R.drawable.italic));
-            this.addView(new StyleButton(getContext())
-                    .setFunction(StyleButton.UNDERLINE)
-                    .setImage(R.drawable.underline));
+            // TODO: 15/12/2 Implement Underline.
+//            this.addView(new StyleButton(getContext())
+//                    .setFunction(StyleButton.UNDERLINE)
+//                    .setImage(R.drawable.underline));
             this.addView(new StyleButton(getContext())
                     .setFunction(StyleButton.TODO)
                     .setImage(R.drawable.todo_list));
@@ -50,8 +51,11 @@ public class ToolBar extends HorizontalScrollView {
                     .setFunction(StyleButton.IMAGE)
                     .setImage(R.drawable.image_file));
             this.addView(new StyleButton(getContext())
-                    .setFunction(StyleButton.PDF)
-                    .setImage(R.drawable.pdf));
+                    .setFunction(StyleButton.VOICE)
+                    .setImage(R.drawable.voice));
+//            this.addView(new StyleButton(getContext())
+//                    .setFunction(StyleButton.PDF)
+//                    .setImage(R.drawable.pdf));
             this.addView(new StyleButton(getContext())
                     .setFunction(StyleButton.FILE)
                     .setImage(R.drawable.file));
@@ -152,6 +156,7 @@ public class ToolBar extends HorizontalScrollView {
         public static final int IMAGE = 0x44;
         public static final int PDF = 0x45;
         public static final int FILE = 0x46;
-        public static final int DEFAULT = 0x47;
+        public static final int VOICE = 0x47;
+        public static final int DEFAULT = 0x10;
     }
 }

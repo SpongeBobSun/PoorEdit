@@ -14,6 +14,7 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
+import android.widget.Toast;
 
 import sun.bob.pooredit.utils.Constants;
 import sun.bob.pooredit.views.BaseContainer;
@@ -107,6 +108,9 @@ public class PoorEdit extends LinearLayout{
                 int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
                 String picPath = cursor.getString(columnIndex);
                 cursor.close();
+                if (picPath == null || picPath.length() == 0){
+                    break;
+                }
                 ((Image) picking).setImage(picPath, 0);
                 break;
             case Constants.REQ_PICK_FILE:

@@ -48,7 +48,7 @@ public class Todo extends BaseContainer {
             }
         });
         container.addView(checkBox);
-        text = new Text(getContext());
+        text = new Text(getContext()).setIsChild(true);
         text.setLayoutParams(new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT, (float) 1.0));
         container.addView(text);
         this.addView(container);
@@ -63,6 +63,10 @@ public class Todo extends BaseContainer {
     public Todo setText(CharSequence content){
         text.setText(content);
         return this;
+    }
+
+    public void focus(){
+        text.requestFocus();
     }
 
     @Override

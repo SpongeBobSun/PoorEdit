@@ -71,6 +71,7 @@ public class EditView extends LinearLayout {
         Todo todo = new Todo(getContext());
         this.addView(todo, index);
         this.addView(new Text(getContext()));
+        todo.focus();
         return todo;
     }
 
@@ -291,6 +292,14 @@ public class EditView extends LinearLayout {
             return;
         }
         final BaseContainer toDel = (BaseContainer) this.getChildAt(index - 1);
+        if (toDel.getType() == Constants.TYPE_TEXT && toDel.isEmpty()){
+            removeView(toDel);
+            return;
+        }
+        if (view.getType() == Constants.TYPE_TEXT && view.isEmpty() && index != getChildCount() - 1){
+            removeView(view);
+            return;
+        }
         String which = null;
         switch (toDel.getType()){
             case Constants.TYPE_IMAGE:
@@ -326,5 +335,13 @@ public class EditView extends LinearLayout {
                 .create()
                 .show();
 
+    }
+
+    public void requestNext(BaseContainer view){
+        BaseContainer container = (BaseContainer) view.getParent().getParent();
+        if (container instanceof Todo){
+            int index = this.indexOfChild(container);
+            this.addTodoOn(index + 1);
+        }
     }
 }
