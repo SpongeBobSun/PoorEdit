@@ -61,6 +61,7 @@ public class Text extends BaseContainer{
         baseText.setBackgroundColor(Color.WHITE);
         this.addView(baseText);
         styles = new HashMap<>();
+        baseText.requestFocus();
     }
 
 
@@ -191,20 +192,27 @@ public class Text extends BaseContainer{
                 }
             });
             this.addTextChangedListener(new TextChangeListener());
+            this.setOnKeyListener(new OnKeyListener() {
+                @Override
+                public boolean onKey(View v, int keyCode, KeyEvent event) {
+                    if (event.getAction() == KeyEvent.ACTION_DOWN){
+                        return false;
+                    }
+                    switch (keyCode){
+                        case KeyEvent.KEYCODE_DEL:
+                            if (baseText.getSelectionStart() == 0){
+                                EditView.instance.requestDelete(Text.this);
+                            }
+                            break;
+                        case KeyEvent.KEYCODE_ENTER:
+                            // TODO: 15/12/1 For Todos and Lists, add a new line here and DO NOT let EditText break line.
+                            break;
+                    }
+                    return false;
+                }
+            });
         }
 
-        @Override
-        public boolean dispatchKeyEventPreIme(KeyEvent key){
-            switch (key.getKeyCode()){
-                case KeyEvent.KEYCODE_BACK:
-                    // TODO: 15/12/1 Delete previous view here. Maybe give an alert dialog.
-                    break;
-                case KeyEvent.KEYCODE_ENTER:
-                    // TODO: 15/12/1 For Todos and Lists, add a new line here and DO NOT let EditText break line.
-                    break;
-            }
-            return super.dispatchKeyEvent(key);
-        }
         @Override
         public void onSelectionChanged(int start, int end){
             if (start == end){

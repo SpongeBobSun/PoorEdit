@@ -1,12 +1,16 @@
 package sun.bob.pooredit.views;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.support.v7.app.AlertDialog;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.style.StyleSpan;
 import android.util.AttributeSet;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 
@@ -256,6 +260,71 @@ public class EditView extends LinearLayout {
                     break;
             }
         }
+
+    }
+
+    public void requestDelete(BaseContainer view){
+        try {
+            // For list items, getParent twice will get its BaseContainer.
+            if (view.getParent().getParent() instanceof BaseContainer){
+                BaseContainer container = (BaseContainer) view.getParent().getParent();
+                int index = this.indexOfChild(container);
+                if (index < 1){
+                    return;
+                }
+                final BaseContainer toDel = (BaseContainer) this.getChildAt(index - 1);
+                if (container.getType() == Constants.TYPE_TODO && toDel.getType() == Constants.TYPE_TODO){
+                    this.removeView(toDel);
+                } else {
+                    this.removeView((View) view.getParent().getParent());
+                    this.addView(new Text(getContext()), index);
+                }
+                return;
+            }
+        } catch (NullPointerException e){
+            //Eat it.
+        }
+
+
+        int index = this.indexOfChild(view);
+        if (index < 1){
+            return;
+        }
+        final BaseContainer toDel = (BaseContainer) this.getChildAt(index - 1);
+        String which = null;
+        switch (toDel.getType()){
+            case Constants.TYPE_IMAGE:
+                which = "Image";
+                break;
+            case Constants.TYPE_ATT:
+                which = "File";
+                break;
+            case Constants.TYPE_REC:
+                which = "Voice";
+                break;
+        }
+        if (which == null){
+            return;
+        }
+
+        new AlertDialog.Builder(getContext())
+                .setTitle("Confirm")
+                .setMessage("Delete " + which + " ?")
+                .setPositiveButton("Sure", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        EditView.this.removeView(toDel);
+                        dialog.dismiss();
+                    }
+                })
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                })
+                .create()
+                .show();
 
     }
 }
