@@ -233,8 +233,11 @@ public class EditView extends LinearLayout {
                         int style = (int) Math.round((Double)styles.get(i));
                         s = (int) Math.round((Double) spans.get(i).get("start"));
                         e = (int) Math.round((Double) spans.get(i).get("end"));
-                        if (s >= length || e >= length){
+                        if (s >= length){
                             continue;
+                        }
+                        if (e >= length){
+                            e = length - 1;
                         }
                         switch (style){
                             case ToolBar.StyleButton.BOLD:
@@ -408,9 +411,13 @@ public class EditView extends LinearLayout {
 
     public void requestNext(BaseContainer view){
         BaseContainer container = (BaseContainer) view.getParent().getParent();
-        if (container instanceof Todo || container instanceof Item){
+        if (container instanceof Todo){
             int index = this.indexOfChild(container);
             this.addTodoOn(index + 1);
+        }
+        if (container instanceof Item){
+            int index = this.indexOfChild(container);
+            this.addItemOn(index + 1);
         }
     }
 }

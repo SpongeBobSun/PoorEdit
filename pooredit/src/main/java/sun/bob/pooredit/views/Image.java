@@ -43,6 +43,9 @@ public class Image extends BaseContainer {
     public void initUI() {
         container = new LinearLayout(getContext());
         container.setOrientation(LinearLayout.HORIZONTAL);
+        LayoutParams layoutParams = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        layoutParams.setMargins(0, 5, 0, 5);
+        container.setLayoutParams(layoutParams);
         hintText = new TextView(getContext());
         hintText.setText(" Click to select image.");
         hintText.setLayoutParams(new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT, (float) 1.0));

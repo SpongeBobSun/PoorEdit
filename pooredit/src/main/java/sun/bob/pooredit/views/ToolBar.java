@@ -26,7 +26,8 @@ public class ToolBar extends HorizontalScrollView {
     }
 
     private void initUI(){
-        this.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 50));
+        int destiney = (int) getContext().getResources().getSystem().getDisplayMetrics().density;
+        this.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,50 * destiney ));
         this.addView(new ToolBarWidget(getContext()));
     }
 
@@ -73,9 +74,9 @@ public class ToolBar extends HorizontalScrollView {
 
         public StyleButton(Context context) {
             super(context);
-            this.setLayoutParams(new LinearLayout.LayoutParams(Constants.TOOLBAR_SIZE, Constants.TOOLBAR_SIZE));
-            this.setMaxHeight(Constants.TOOLBAR_SIZE);
-            this.setMaxWidth(Constants.TOOLBAR_SIZE);
+            this.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT));
+//            this.setMaxHeight(Constants.TOOLBAR_SIZE);
+//            this.setMaxWidth(Constants.TOOLBAR_SIZE);
             this.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {

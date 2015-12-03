@@ -45,6 +45,9 @@ public class File extends BaseContainer {
         container = new LinearLayout(getContext());
         container.setOrientation(LinearLayout.HORIZONTAL);
         container.setGravity(Gravity.CENTER_VERTICAL);
+        LayoutParams layoutParams = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        layoutParams.setMargins(0, 5, 0, 5);
+        container.setLayoutParams(layoutParams);
         icon = new ImageView(getContext());
         icon.setImageResource(R.drawable.file);
 
