@@ -40,9 +40,8 @@ public class Item extends BaseContainer {
     public void initUI() {
         container = new LinearLayout(getContext());
         container.setOrientation(LinearLayout.HORIZONTAL);
-        dot = new Dot();
         View dotHolder = new View(getContext());
-        dotHolder.setBackground(dot);
+        dotHolder.setBackground(Dot.getInstance());
         dotHolder.setLayoutParams(new LinearLayout.LayoutParams(50, ViewGroup.LayoutParams.MATCH_PARENT));
         container.addView(dotHolder);
         text = new Text(getContext()).setIsChild(true);

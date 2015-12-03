@@ -7,26 +7,28 @@ import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
 
 /**
- * Created by bob.sun on 15/12/2.
+ * Created by bob.sun on 15/12/3.
  */
-public class Dot extends Drawable {
+public class BackgroundBorder extends Drawable {
 
     private Paint paint;
-    private static Dot instance;
-    private Dot(){
+    private static BackgroundBorder instance;
+    private BackgroundBorder(){
         paint = new Paint();
-        paint.setColor(Color.BLACK);
+        paint.setColor(Color.LTGRAY);
+        paint.setStyle(Paint.Style.STROKE);
+        paint.setStrokeWidth(3);
     }
 
-    public static Dot getInstance() {
+    public static BackgroundBorder getInstance() {
         if (instance == null)
-            instance = new Dot();
+            instance = new BackgroundBorder();
         return instance;
     }
 
     @Override
     public void draw(Canvas canvas) {
-        canvas.drawCircle(canvas.getWidth() / 2, canvas.getHeight() / 2, 10, paint);
+        canvas.drawRect(0, 0, canvas.getWidth(), canvas.getHeight(), paint);
     }
 
     @Override

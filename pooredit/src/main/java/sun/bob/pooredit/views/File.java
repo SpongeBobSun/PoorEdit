@@ -15,6 +15,7 @@ import android.widget.Toast;
 import sun.bob.pooredit.PoorEdit;
 import sun.bob.pooredit.R;
 import sun.bob.pooredit.beans.ElementBean;
+import sun.bob.pooredit.drawables.BackgroundBorder;
 import sun.bob.pooredit.utils.Constants;
 
 /**
@@ -51,7 +52,7 @@ public class File extends BaseContainer {
         fileContainer.setOrientation(LinearLayout.VERTICAL);
 
         fileNameView = new TextView(getContext());
-        fileNameView.setText("Click to Select File");
+        fileNameView.setText(" Click to Select File");
         fileNameView.setGravity(Gravity.CENTER_VERTICAL);
         fileNameView.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, (float) 2.0));
 
@@ -65,6 +66,8 @@ public class File extends BaseContainer {
         container.addView(icon);
         container.addView(fileContainer);
         this.addView(container);
+
+        this.setBackground(BackgroundBorder.getInstance());
 
         this.setOnClickListener(new OnClickListener() {
             @Override

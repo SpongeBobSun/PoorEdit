@@ -9,13 +9,14 @@ import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import sun.bob.pooredit.PoorEdit;
 import sun.bob.pooredit.R;
 import sun.bob.pooredit.beans.ElementBean;
+import sun.bob.pooredit.drawables.BackgroundBorder;
 import sun.bob.pooredit.utils.Constants;
 
 /**
@@ -27,6 +28,9 @@ public class Image extends BaseContainer {
     private ImageLoaderItf imageLoaderItf;
     private boolean empty = true;
     private String imgPath;
+    private LinearLayout container;
+    private TextView hintText;
+    private ImageView hintImg;
     public Image(Context context) {
         super(context);
     }
@@ -37,10 +41,24 @@ public class Image extends BaseContainer {
 
     @Override
     public void initUI() {
-        baseImage = new BaseImage(getContext());
+        container = new LinearLayout(getContext());
+        container.setOrientation(LinearLayout.HORIZONTAL);
+        hintText = new TextView(getContext());
+        hintText.setText(" Click to select image.");
+        hintText.setLayoutParams(new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT, (float) 1.0));
+        hintText.setGravity(Gravity.CENTER_VERTICAL);
+
         this.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-        this.addView(baseImage);
-        baseImage.setImageResource(R.drawable.image_file);
+        hintImg = new ImageView(getContext());
+        hintImg.setImageResource(R.drawable.image_file);
+        hintImg.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT));
+        container.addView(hintImg);
+        container.addView(hintText);
+        this.addView(container);
+
+//        this.addView(baseImage);
+        baseImage = new BaseImage(getContext());
+        this.setBackground(BackgroundBorder.getInstance());
         this.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -64,11 +82,17 @@ public class Image extends BaseContainer {
             options.inSampleSize = width / fatherWidth;
             bmp = BitmapFactory.decodeFile(image, options);
             baseImage.setImageBitmap(bmp);
+            this.removeView(container);
+            this.addView(baseImage);
+            this.setBackground(null);
         } else {
             int fatherWidth = Image.this.getWidth();
             if (fatherWidth == 0){
                 fatherWidth = viewWidth;
             }
+            this.removeView(container);
+            this.addView(baseImage);
+            this.setBackground(null);
             imageLoaderItf.loadImage(baseImage, image, fatherWidth);
         }
         empty = false;
