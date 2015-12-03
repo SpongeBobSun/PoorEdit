@@ -2,7 +2,6 @@ package sun.bob.pooredit.views;
 
 import android.content.Context;
 import android.content.DialogInterface;
-import android.graphics.Color;
 import android.graphics.Typeface;
 import android.support.v7.app.AlertDialog;
 import android.text.SpannableString;
@@ -10,8 +9,6 @@ import android.text.Spanned;
 import android.text.style.StyleSpan;
 import android.util.AttributeSet;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 
 import com.google.gson.Gson;
@@ -107,7 +104,7 @@ public class EditView extends LinearLayout {
             this.addView(new Text(getContext()));
         } else {
             if (getChildCount() > 1){
-                this.addView(e, getChildCount() - 2);
+                this.addView(e, getChildCount() - 1);
             } else {
                 this.addView(e);
                 this.addView(new Text(getContext()));
@@ -157,6 +154,14 @@ public class EditView extends LinearLayout {
                     }
                     break;
                 case Constants.TYPE_ATT:
+                    if (!e.isEmpty()) {
+                        content.add(((ElementBean) e.getJsonBean()).setIndex(i - empty));
+                    } else {
+                        empty ++;
+                    }
+                    break;
+                // TODO: 15/12/2 Add type item import & export.
+                case Constants.TYPE_ITEM:
                     if (!e.isEmpty()) {
                         content.add(((ElementBean) e.getJsonBean()).setIndex(i - empty));
                     } else {
@@ -284,6 +289,36 @@ public class EditView extends LinearLayout {
                     todo.setText(ssTodo);
                     todo.setChecked((Boolean) bean.get("checked"));
                     break;
+                case Constants.TYPE_ITEM:
+                    Item item = addItemOn((int) Math.round((Double) bean.get("index")));
+                    SpannableString ssItem = new SpannableString((String) bean.get("text"));
+                    int lenItem = ssItem.length();
+                    ArrayList<LinkedTreeMap> spansItem = (ArrayList) bean.get("spans");
+                    ArrayList stylesItem = (ArrayList<Integer>) bean.get("styles");
+                    int si, ei;
+                    for (int i = 0; i < stylesItem.size(); i++){
+                        int style = (int) Math.round((Double)stylesItem.get(i));
+                        si = (int) Math.round((Double) spansItem.get(i).get("start"));
+                        ei = (int) Math.round((Double) spansItem.get(i).get("end"));
+                        if (si >= lenItem || ei >= lenItem){
+                            continue;
+                        }
+                        switch (style){
+                            case ToolBar.StyleButton.BOLD:
+                                ssItem.setSpan(new StyleSpan(Typeface.BOLD), si, ei, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                                break;
+                            case ToolBar.StyleButton.ITALIC:
+                                ssItem.setSpan(new StyleSpan(Typeface.ITALIC), si, ei, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                                break;
+                            case ToolBar.StyleButton.BOLD + ToolBar.StyleButton.ITALIC:
+                                ssItem.setSpan(new StyleSpan(Typeface.BOLD_ITALIC), si, ei, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                    item.setText(ssItem);
+                    break;
                 case Constants.TYPE_ATT:
                     sun.bob.pooredit.views.File fileView = addFileOn((int) Math.round((Double) bean.get("index")));
                     fileView.setFilePath((String) bean.get("filePath"));
@@ -374,7 +409,7 @@ public class EditView extends LinearLayout {
 
     public void requestNext(BaseContainer view){
         BaseContainer container = (BaseContainer) view.getParent().getParent();
-        if (container instanceof Todo){
+        if (container instanceof Todo || container instanceof Item){
             int index = this.indexOfChild(container);
             this.addTodoOn(index + 1);
         }

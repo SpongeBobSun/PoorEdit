@@ -241,7 +241,7 @@ public class Text extends BaseContainer{
                     }
                     break;
                 case KeyEvent.KEYCODE_ENTER:
-                    // TODO: 15/12/1 For Todos and Lists, add a new line here and DO NOT let EditText break line.
+                    // TODO: 15/12/1 For Lists, add a new line here and DO NOT let EditText break line.
                     if (isChild){
                         EditView.instance.requestNext(Text.this);
                         return true;
