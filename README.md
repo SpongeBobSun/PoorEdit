@@ -74,6 +74,9 @@ So,
 ###ANY PULL REQUSTS IS WELCOME!
 ###THANKS IN ADVANCE!
 
+#Credits
+Icons from [icons8.com](https://icons8.com/)
+
 #License
 
 ###Good Boy License
