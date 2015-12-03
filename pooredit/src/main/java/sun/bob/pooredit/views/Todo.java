@@ -49,7 +49,7 @@ public class Todo extends BaseContainer {
         });
         container.addView(checkBox);
         text = new Text(getContext()).setIsChild(true);
-        text.setLayoutParams(new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT, (float) 1.0));
+        text.setLayoutParams(new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, (float) 1.0));
         container.addView(text);
         this.addView(container);
     }

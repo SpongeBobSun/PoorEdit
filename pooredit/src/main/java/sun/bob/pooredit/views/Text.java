@@ -208,28 +208,6 @@ public class Text extends BaseContainer{
                 }
             });
             this.addTextChangedListener(new TextChangeListener());
-//            this.setOnKeyListener(new OnKeyListener() {
-//                @Override
-//                public boolean onKey(View v, int keyCode, KeyEvent event) {
-//                    if (event.getAction() == KeyEvent.ACTION_DOWN) {
-//                        return false;
-//                    }
-//                    switch (keyCode) {
-//                        case KeyEvent.KEYCODE_DEL:
-//                            if (baseText.getSelectionStart() == 0) {
-//                                EditView.instance.requestDelete(Text.this);
-//                            }
-//                            break;
-//                        case KeyEvent.KEYCODE_ENTER:
-//                            // TODO: 15/12/1 For Todos and Lists, add a new line here and DO NOT let EditText break line.
-//                            if (!isChild)
-//                                break;
-//                            EditView.instance.requestNext(Text.this);
-//                            return isChild;
-//                    }
-//                    return false;
-//                }
-//            });
         }
 
         @Override
@@ -241,7 +219,6 @@ public class Text extends BaseContainer{
                     }
                     break;
                 case KeyEvent.KEYCODE_ENTER:
-                    // TODO: 15/12/1 For Lists, add a new line here and DO NOT let EditText break line.
                     if (isChild){
                         EditView.instance.requestNext(Text.this);
                         return true;

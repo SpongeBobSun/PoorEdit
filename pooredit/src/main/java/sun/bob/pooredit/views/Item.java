@@ -46,7 +46,7 @@ public class Item extends BaseContainer {
         dotHolder.setLayoutParams(new LinearLayout.LayoutParams(50, ViewGroup.LayoutParams.MATCH_PARENT));
         container.addView(dotHolder);
         text = new Text(getContext()).setIsChild(true);
-        text.setLayoutParams(new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT, (float) 4.0));
+        text.setLayoutParams(new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, (float) 4.0));
         container.addView(text);
         this.addView(container);
     }

@@ -160,7 +160,6 @@ public class EditView extends LinearLayout {
                         empty ++;
                     }
                     break;
-                // TODO: 15/12/2 Add type item import & export.
                 case Constants.TYPE_ITEM:
                     if (!e.isEmpty()) {
                         content.add(((ElementBean) e.getJsonBean()).setIndex(i - empty));
