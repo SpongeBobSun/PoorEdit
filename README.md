@@ -57,6 +57,7 @@ That's all you need to do to initialize a shinny tinny rich editor.
 * UI tweaks.
 * Bug fix.
 * Add voices.
+* Add handwritings
 
 #Why
 To be honest I always thinking about writing a rich text editor on Android. 
@@ -67,7 +68,13 @@ But still, I wondering whether I can do it or not.
 
 So here we are.
 
-I take `Evernote`'s edit widget as a reference. And I have to say to writing a complex widget like that is so hard for just one guy.
+I take `Evernote`'s edit widget as a reference. 
+
+I didn't use webview in this widget. 
+
+All code are written in pure Java.
+
+And I have to say to writing a complex widget like that is so hard for just one guy.
 
 So,
 
