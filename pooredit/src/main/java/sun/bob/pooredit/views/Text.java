@@ -9,6 +9,7 @@ import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextWatcher;
 import android.text.style.StyleSpan;
+import android.text.style.UnderlineSpan;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -35,10 +36,10 @@ public class Text extends BaseContainer{
     protected BaseText baseText;
     protected int color;
     protected int background;
-    private boolean underline;
 
     private boolean bolding = false;
     private boolean italicing = false;
+    private boolean underlining = false;
 
     private String selection;
     private int sStart = -2, sEnd = -2;
@@ -109,6 +110,11 @@ public class Text extends BaseContainer{
 
     public Text setItalicing(boolean italicing) {
         this.italicing = italicing;
+        return this;
+    }
+
+    public Text setUnderlining(boolean underlining) {
+        this.underlining = underlining;
         return this;
     }
 
@@ -290,20 +296,18 @@ public class Text extends BaseContainer{
                     if (bolding && !italicing) {
                         ss.setSpan(new StyleSpan(Typeface.BOLD), start, start + count, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                         BaseText.this.getEditableText().replace(0, s.length(), ss);
-//                    styled = true;
-//                    changedStyle = ToolBar.StyleButton.BOLD;
                     }
                     if (italicing && !bolding) {
                         ss.setSpan(new StyleSpan(Typeface.ITALIC), start, start + count, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                         BaseText.this.getEditableText().replace(0, s.length(), ss);
-//                    styled = true;
-//                    changedStyle = ToolBar.StyleButton.ITALIC;
                     }
                     if (italicing && bolding) {
                         ss.setSpan(new StyleSpan(Typeface.BOLD_ITALIC), start, start + count, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                         BaseText.this.getEditableText().replace(0, s.length(), ss);
-//                    styled = true;
-//                    changedStyle = ToolBar.StyleButton.BOLD + ToolBar.StyleButton.ITALIC;
+                    }
+                    if (underlining){
+                        ss.setSpan(new UnderlineSpan(), start, start + count,Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                        BaseText.this.getEditableText().replace(0, s.length(), ss);
                     }
                 }
             }

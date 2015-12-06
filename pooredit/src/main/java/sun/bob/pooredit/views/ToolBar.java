@@ -41,11 +41,9 @@ public class ToolBar extends HorizontalScrollView {
             this.addView(new StyleButton(getContext())
                     .setFunction(StyleButton.ITALIC)
                     .setImage(R.drawable.italic));
-
-            // TODO: 15/12/2 Implement Underline.
-//            this.addView(new StyleButton(getContext())
-//                    .setFunction(StyleButton.UNDERLINE)
-//                    .setImage(R.drawable.underline));
+            this.addView(new StyleButton(getContext())
+                    .setFunction(StyleButton.UNDERLINE)
+                    .setImage(R.drawable.underline));
             this.addView(new StyleButton(getContext())
                     .setFunction(StyleButton.TODO)
                     .setImage(R.drawable.todo_list));
@@ -123,6 +121,27 @@ public class ToolBar extends HorizontalScrollView {
                                     //turn off
                                     text.setItalicing(false);
                                     setImageResource(R.drawable.italic);
+                                    on = false;
+                                }
+                            }
+                            break;
+                        case UNDERLINE:
+                            if (text.getSelection() != null){
+                                if (text.getSelectionStyle() == UNDERLINE){
+                                    text.applySelectionStyle(DEFAULT);
+                                } else {
+                                    text.applySelectionStyle(UNDERLINE);
+                                }
+                            } else {
+                                if (!on) {
+                                    //turn on
+                                    text.setUnderlining(true);
+                                    setImageResource(R.drawable.underline_filled);
+                                    on = true;
+                                } else {
+                                    //turn off
+                                    text.setUnderlining(false);
+                                    setImageResource(R.drawable.underline);
                                     on = false;
                                 }
                             }
