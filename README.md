@@ -1,9 +1,11 @@
 #PoorEdit
 
+[![Android Arsenal](https://img.shields.io/badge/Android%20Arsenal-PoorEdit-green.svg?style=true)](https://android-arsenal.com/details/1/2870)
+
 Rich Text Editor for Android
 
 #Status
-WIP.
+WIP. So those who forked this repo may need to merge my code manually.
 
 Buggy but almost there!
 
@@ -18,6 +20,7 @@ I'm tring to make it look & feel like you are still in `Evernote`
 * Basic text editing
 * Bold
 * Italic
+* Underline
 * Images
 * File attachments
 * Todo lists
@@ -58,6 +61,8 @@ That's all you need to do to initialize a shinny tinny rich editor.
 * Bug fix.
 * Add voices.
 * Add handwritings
+* Font & Colors
+* Text backgrounds.
 
 #Why
 To be honest I always thinking about writing a rich text editor on Android. 
