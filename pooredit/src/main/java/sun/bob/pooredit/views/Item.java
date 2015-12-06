@@ -1,6 +1,8 @@
 package sun.bob.pooredit.views;
 
 import android.content.Context;
+import android.text.Html;
+import android.text.Spanned;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
@@ -66,17 +68,10 @@ public class Item extends BaseContainer {
 
     @Override
     public Object getJsonBean() {
-        try {
-            return new ItemBean().setText(text.baseText.getText().toString())
-                    .setBackground(text.background)
-                    .setColor(text.color)
-                    .setLength(text.baseText.length())
-                    .setSpans(text.styles)
-                    .setStyles(text.styles);
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        }
-        return null;
+        return new ItemBean().setText(text.baseText.getText())
+                .setBackground(text.background)
+                .setColor(text.color)
+                .setLength(text.baseText.length());
     }
 
     @Override
@@ -92,9 +87,6 @@ public class Item extends BaseContainer {
         private int background;
         private long length;
 
-        private ArrayList<SpanBean> spans;
-        private ArrayList<Integer> styles;
-
         public ItemBean() {
             super();
         }
@@ -109,8 +101,8 @@ public class Item extends BaseContainer {
             return text;
         }
 
-        public ItemBean setText(String text) {
-            this.text = text;
+        public ItemBean setText(CharSequence text) {
+            this.text = Html.toHtml((Spanned) text);
             return this;
         }
 
@@ -133,39 +125,6 @@ public class Item extends BaseContainer {
             return this;
         }
 
-        public ItemBean setStyles(HashMap<SpanBean, Integer> map) throws IllegalAccessException {
-            styles = new ArrayList<>();
-            if (this.spans == null){
-                throw new IllegalAccessException("Should call setSpans first!");
-            }
-            for (SpanBean spanBean : this.spans){
-                this.styles.add(map.get(spanBean));
-            }
-            return this;
-        }
-
-        public ArrayList<SpanBean> getSpans() {
-            return spans;
-        }
-
-        public ItemBean setSpans(HashMap map) {
-            spans = new ArrayList<>();
-            Iterator iterator = map.keySet().iterator();
-            SpanBean toAdd;
-            while (iterator.hasNext()){
-                toAdd = (SpanBean) iterator.next();
-                if (toAdd.getStart() >= length){
-                    continue;
-                }
-                spans.add(toAdd);
-            }
-            Collections.sort(spans);
-            return this;
-        }
-
-        public ArrayList<Integer> getStyles() {
-            return styles;
-        }
 
         public long getLength() {
             return length;

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Typeface;
 import android.support.v7.app.AlertDialog;
+import android.text.Html;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.style.StyleSpan;
@@ -224,37 +225,8 @@ public class EditView extends LinearLayout {
             switch (type){
                 case Constants.TYPE_TEXT:
                     Text text = addTextOn((int) Math.round((Double) bean.get("index")));
-                    SpannableString spannableString = new SpannableString((String) bean.get("text"));
-                    int length = spannableString.length();
-                    ArrayList<LinkedTreeMap> spans = (ArrayList) bean.get("spans");
-                    ArrayList styles = (ArrayList<Integer>) bean.get("styles");
-                    int s, e;
-                    for (int i = 0; i < styles.size(); i++){
-                        int style = (int) Math.round((Double)styles.get(i));
-                        s = (int) Math.round((Double) spans.get(i).get("start"));
-                        e = (int) Math.round((Double) spans.get(i).get("end"));
-                        if (s >= length){
-                            continue;
-                        }
-                        if (e >= length){
-                            e = length - 1;
-                        }
-                        switch (style){
-                            case ToolBar.StyleButton.BOLD:
-                                spannableString.setSpan(new StyleSpan(Typeface.BOLD), s, e, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                                break;
-                            case ToolBar.StyleButton.ITALIC:
-                                spannableString.setSpan(new StyleSpan(Typeface.ITALIC), s, e, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                                break;
-                            case ToolBar.StyleButton.BOLD + ToolBar.StyleButton.ITALIC:
-                                spannableString.setSpan(new StyleSpan(Typeface.BOLD_ITALIC), s, e, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                                break;
-                            default:
-                                break;
-                        }
-                    }
-                    text.setText(spannableString);
-
+                    SpannableString ssText = new SpannableString(Html.fromHtml((String) bean.get("text")));
+                    text.setText(ssText);
                     break;
                 case Constants.TYPE_IMAGE:
                     Image img = addImageOn((int) Math.round((Double) bean.get("index")));
@@ -262,63 +234,13 @@ public class EditView extends LinearLayout {
                     break;
                 case Constants.TYPE_TODO:
                     Todo todo = addTodoOn((int) Math.round((Double) bean.get("index")));
-                    SpannableString ssTodo = new SpannableString((String) bean.get("text"));
-                    int lenTodo = ssTodo.length();
-                    ArrayList<LinkedTreeMap> spansTodo = (ArrayList) bean.get("spans");
-                    ArrayList stylesTodo = (ArrayList<Integer>) bean.get("styles");
-                    int st, et;
-                    for (int i = 0; i < stylesTodo.size(); i++){
-                        int style = (int) Math.round((Double)stylesTodo.get(i));
-                        st = (int) Math.round((Double) spansTodo.get(i).get("start"));
-                        et = (int) Math.round((Double) spansTodo.get(i).get("end"));
-                        if (st >= lenTodo || et >= lenTodo){
-                            continue;
-                        }
-                        switch (style){
-                            case ToolBar.StyleButton.BOLD:
-                                ssTodo.setSpan(new StyleSpan(Typeface.BOLD), st, et, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                                break;
-                            case ToolBar.StyleButton.ITALIC:
-                                ssTodo.setSpan(new StyleSpan(Typeface.ITALIC), st, et, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                                break;
-                            case ToolBar.StyleButton.BOLD + ToolBar.StyleButton.ITALIC:
-                                ssTodo.setSpan(new StyleSpan(Typeface.BOLD_ITALIC), st, et, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                                break;
-                            default:
-                                break;
-                        }
-                    }
+                    SpannableString ssTodo = new SpannableString(Html.fromHtml((String) bean.get("text")));
                     todo.setText(ssTodo);
                     todo.setChecked((Boolean) bean.get("checked"));
                     break;
                 case Constants.TYPE_ITEM:
                     Item item = addItemOn((int) Math.round((Double) bean.get("index")));
-                    SpannableString ssItem = new SpannableString((String) bean.get("text"));
-                    int lenItem = ssItem.length();
-                    ArrayList<LinkedTreeMap> spansItem = (ArrayList) bean.get("spans");
-                    ArrayList stylesItem = (ArrayList<Integer>) bean.get("styles");
-                    int si, ei;
-                    for (int i = 0; i < stylesItem.size(); i++){
-                        int style = (int) Math.round((Double)stylesItem.get(i));
-                        si = (int) Math.round((Double) spansItem.get(i).get("start"));
-                        ei = (int) Math.round((Double) spansItem.get(i).get("end"));
-                        if (si >= lenItem || ei >= lenItem){
-                            continue;
-                        }
-                        switch (style){
-                            case ToolBar.StyleButton.BOLD:
-                                ssItem.setSpan(new StyleSpan(Typeface.BOLD), si, ei, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                                break;
-                            case ToolBar.StyleButton.ITALIC:
-                                ssItem.setSpan(new StyleSpan(Typeface.ITALIC), si, ei, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                                break;
-                            case ToolBar.StyleButton.BOLD + ToolBar.StyleButton.ITALIC:
-                                ssItem.setSpan(new StyleSpan(Typeface.BOLD_ITALIC), si, ei, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                                break;
-                            default:
-                                break;
-                        }
-                    }
+                    SpannableString ssItem = new SpannableString(Html.fromHtml((String) bean.get("text")));
                     item.setText(ssItem);
                     break;
                 case Constants.TYPE_ATT:

@@ -1,6 +1,8 @@
 package sun.bob.pooredit.views;
 
 import android.content.Context;
+import android.text.Html;
+import android.text.Spanned;
 import android.util.AttributeSet;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
@@ -76,18 +78,11 @@ public class Todo extends BaseContainer {
 
     @Override
     public Object getJsonBean() {
-        try {
-            return new TodoBean().setText(text.baseText.getText().toString())
-                    .setBackground(text.background)
-                    .setColor(text.color)
-                    .setLength(text.baseText.length())
-                    .setSpans(text.styles)
-                    .setStyles(text.styles)
-                    .setChecked(checked);
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        }
-        return null;
+        return new TodoBean().setText(text.baseText.getText())
+                .setBackground(text.background)
+                .setColor(text.color)
+                .setLength(text.baseText.length())
+                .setChecked(checked);
     }
 
     @Override
@@ -104,9 +99,6 @@ public class Todo extends BaseContainer {
         private int background;
         private long length;
 
-        private ArrayList<SpanBean> spans;
-        private ArrayList<Integer> styles;
-
         public TodoBean() {
             super();
         }
@@ -121,8 +113,8 @@ public class Todo extends BaseContainer {
             return text;
         }
 
-        public TodoBean setText(String text) {
-            this.text = text;
+        public TodoBean setText(CharSequence text) {
+            this.text = Html.toHtml((Spanned) text);
             return this;
         }
 
@@ -145,39 +137,6 @@ public class Todo extends BaseContainer {
             return this;
         }
 
-        public TodoBean setStyles(HashMap<SpanBean, Integer> map) throws IllegalAccessException {
-            styles = new ArrayList<>();
-            if (this.spans == null){
-                throw new IllegalAccessException("Should call setSpans first!");
-            }
-            for (SpanBean spanBean : this.spans){
-                this.styles.add(map.get(spanBean));
-            }
-            return this;
-        }
-
-        public ArrayList<SpanBean> getSpans() {
-            return spans;
-        }
-
-        public TodoBean setSpans(HashMap map) {
-            spans = new ArrayList<>();
-            Iterator iterator = map.keySet().iterator();
-            SpanBean toAdd;
-            while (iterator.hasNext()){
-                toAdd = (SpanBean) iterator.next();
-                if (toAdd.getStart() >= length){
-                    continue;
-                }
-                spans.add(toAdd);
-            }
-            Collections.sort(spans);
-            return this;
-        }
-
-        public ArrayList<Integer> getStyles() {
-            return styles;
-        }
 
         public long getLength() {
             return length;
