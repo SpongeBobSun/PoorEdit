@@ -29,6 +29,7 @@ I'm tring to make it look & feel like you are still in `Evernote`
 * JSON import
 
 #Usage
+##Setup
 This project is still working in progress and I do NOT recommend using it in production env.
 
 After check out this repo, you will get a test project and `PoorEdit` widget is located in `pooredit` folder. Import this folder as module in Android Studio.
@@ -55,6 +56,42 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data){
 The reason for that is `PoorEdit` need to start image picking or file picking activities and it will require picking result after those activities finished.
 
 That's all you need to do to initialize a shinny tinny rich editor.
+
+##Export & Import
+PoorEdit support `json` export and import.
+
+You can take the sample project as reference or use below two functions.
+
+```java
+PoorEdit.exportJSON(String jsonFolder)
+PoorEdit.loadJson(String jsonFolder)
+```
+
+Both functions require an string arguement which is the folder where the json file will be. 
+
+PoorEdit will create a `content.json` in that folder. The reason why we need a folder is, I think you may want to copy files, images and other stuff in editor to one folder. That's make the folder a `notebook`, which you can upload those files to a webserver or something. Notice, PoorEdit dose NOT contains the upload part. It  even doesn't require an Internet permission.
+
+Below is the complete import & export code in sample project.
+
+```java
+@Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        //Do the export.
+        if (id == R.id.action_exp) {
+            ((PoorEdit) findViewById(R.id.id_poor_edit)).exportJSON("/sdcard/pooredit/debug/");
+            return true;
+        }
+        //Do the import.
+        if (id == R.id.action_imp){
+            ((PoorEdit) findViewById(R.id.id_poor_edit)).loadJson("/sdcard/pooredit/debug/");
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+```
+
+When you click those menu items, a json file located in `/sdcard/pooredit/debug/content.json` will be created / loaded.
 
 #Todos
 * UI tweaks.
