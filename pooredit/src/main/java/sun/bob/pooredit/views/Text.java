@@ -1,13 +1,16 @@
 package sun.bob.pooredit.views;
 
 import android.content.Context;
+import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.text.Editable;
 import android.text.Html;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextWatcher;
+import android.text.style.BackgroundColorSpan;
 import android.text.style.StyleSpan;
 import android.text.style.UnderlineSpan;
 import android.util.AttributeSet;
@@ -40,6 +43,7 @@ public class Text extends BaseContainer{
     private boolean bolding = false;
     private boolean italicing = false;
     private boolean underlining = false;
+    private boolean highlighting = false;
 
     private String selection;
     private int sStart = -2, sEnd = -2;
@@ -118,6 +122,11 @@ public class Text extends BaseContainer{
         return this;
     }
 
+    public Text setHighlighting(boolean highlighting) {
+        this.highlighting = highlighting;
+        return this;
+    }
+
     public String getSelection() {
         return selection;
     }
@@ -145,6 +154,14 @@ public class Text extends BaseContainer{
             case ToolBar.StyleButton.DEFAULT:
                 baseText.getText().setSpan(null, sStart, sEnd, 0);
                 selectionStyle = ToolBar.StyleButton.DEFAULT;
+                break;
+            case ToolBar.StyleButton.HIGHLIGHT:
+                baseText.getText().setSpan(new BackgroundColorSpan(Color.YELLOW), sStart, sEnd, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                selectionStyle = ToolBar.StyleButton.HIGHLIGHT;
+                break;
+            case ToolBar.StyleButton.UNDERLINE:
+                baseText.getText().setSpan(new UnderlineSpan(), sStart, sEnd, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                selectionStyle = ToolBar.StyleButton.HIGHLIGHT;
                 break;
             default:
                 invalide = true;
@@ -273,9 +290,6 @@ public class Text extends BaseContainer{
 
             private int charCount = 0;
             private int len;
-//            private boolean styled = false;
-//            private int changedStyle = ToolBar.StyleButton.DEFAULT;
-//            private int lastStart = 0, lastEnd = 0;
             InputMethodManager inputMethodManager;
 
             public TextChangeListener(){
@@ -309,6 +323,10 @@ public class Text extends BaseContainer{
                         ss.setSpan(new UnderlineSpan(), start, start + count,Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                         BaseText.this.getEditableText().replace(0, s.length(), ss);
                     }
+                    if (highlighting){
+                        ss.setSpan(new BackgroundColorSpan(Color.YELLOW), start, start + count, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                        BaseText.this.getEditableText().replace(0, s.length(), ss);
+                    }
                 }
             }
 
@@ -329,9 +347,16 @@ public class Text extends BaseContainer{
         private int background;
         private long length;
 
+        private ArrayList<Integer> starts;
+        private ArrayList<Integer> ends;
+        private ArrayList<Integer> styles;
+
 
         public TextBean(){
             super();
+            starts = new ArrayList<>();
+            ends = new ArrayList<>();
+            styles = new ArrayList<>();
         }
 
         public String getText() {
@@ -339,6 +364,13 @@ public class Text extends BaseContainer{
         }
 
         public TextBean setText(CharSequence text) {
+            //Save styles which html util can not handle.
+            Spanned spanned = (Spanned) text;
+            for (BackgroundColorSpan bg : spanned.getSpans(0, text.length(), BackgroundColorSpan.class)){
+                styles.add(ToolBar.StyleButton.HIGHLIGHT);
+                starts.add(spanned.getSpanStart(bg));
+                ends.add(spanned.getSpanEnd(bg));
+            }
             this.text = Html.toHtml((Spanned) text);
             return this;
         }

@@ -2,11 +2,13 @@ package sun.bob.pooredit.views;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.support.v7.app.AlertDialog;
 import android.text.Html;
 import android.text.SpannableString;
 import android.text.Spanned;
+import android.text.style.BackgroundColorSpan;
 import android.text.style.StyleSpan;
 import android.util.AttributeSet;
 import android.view.View;
@@ -226,6 +228,7 @@ public class EditView extends LinearLayout {
                 case Constants.TYPE_TEXT:
                     Text text = addTextOn((int) Math.round((Double) bean.get("index")));
                     SpannableString ssText = new SpannableString(Html.fromHtml((String) bean.get("text")));
+                    populateAdditionalStyles(bean, ssText);
                     text.setText(ssText);
                     break;
                 case Constants.TYPE_IMAGE:
@@ -252,6 +255,28 @@ public class EditView extends LinearLayout {
             }
         }
 
+    }
+
+    private void populateAdditionalStyles(LinkedTreeMap<String, Object> bean, SpannableString ss){
+        ArrayList<Integer> styles = (ArrayList<Integer>) bean.get("styles");
+        if (styles != null && styles.size() != 0){
+            ArrayList<Integer> starts = (ArrayList<Integer>) bean.get("starts");
+            ArrayList<Integer> ends = (ArrayList<Integer>) bean.get("ends");
+            for (int i = 0; i < styles.size(); i++){
+                int style = gson2Int(styles.get(i));
+                switch (style){
+                    case ToolBar.StyleButton.HIGHLIGHT:
+                        ss.setSpan(new BackgroundColorSpan(Color.YELLOW), gson2Int(starts.get(i)), gson2Int(ends.get(i)), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+    }
+
+    private int gson2Int(Object object){
+        return (int) Math.round((Double) object);
     }
 
     public void requestDelete(BaseContainer view){

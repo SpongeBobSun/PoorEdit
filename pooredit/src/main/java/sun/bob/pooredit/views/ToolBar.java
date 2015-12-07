@@ -1,6 +1,7 @@
 package sun.bob.pooredit.views;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,6 +30,7 @@ public class ToolBar extends HorizontalScrollView {
         int destiney = (int) getContext().getResources().getSystem().getDisplayMetrics().density;
         this.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,50 * destiney ));
         this.addView(new ToolBarWidget(getContext()));
+//        this.setBackgroundColor(Color.rgb(82, 93, 99));
     }
 
     class ToolBarWidget extends LinearLayout{
@@ -45,6 +47,9 @@ public class ToolBar extends HorizontalScrollView {
                     .setFunction(StyleButton.UNDERLINE)
                     .setImage(R.drawable.underline));
             this.addView(new StyleButton(getContext())
+                    .setFunction(StyleButton.HIGHLIGHT)
+                    .setImage(R.drawable.highlight));
+            this.addView(new StyleButton(getContext())
                     .setFunction(StyleButton.TODO)
                     .setImage(R.drawable.todo_list));
             this.addView(new StyleButton(getContext())
@@ -53,9 +58,10 @@ public class ToolBar extends HorizontalScrollView {
             this.addView(new StyleButton(getContext())
                     .setFunction(StyleButton.IMAGE)
                     .setImage(R.drawable.image_file));
-            this.addView(new StyleButton(getContext())
-                    .setFunction(StyleButton.VOICE)
-                    .setImage(R.drawable.voice));
+            // TODO: 15/12/7 Implement voice
+//            this.addView(new StyleButton(getContext())
+//                    .setFunction(StyleButton.VOICE)
+//                    .setImage(R.drawable.voice));
 //            this.addView(new StyleButton(getContext())
 //                    .setFunction(StyleButton.PDF)
 //                    .setImage(R.drawable.pdf));
@@ -73,8 +79,6 @@ public class ToolBar extends HorizontalScrollView {
         public StyleButton(Context context) {
             super(context);
             this.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT));
-//            this.setMaxHeight(Constants.TOOLBAR_SIZE);
-//            this.setMaxWidth(Constants.TOOLBAR_SIZE);
             this.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -146,6 +150,27 @@ public class ToolBar extends HorizontalScrollView {
                                 }
                             }
                             break;
+                        case HIGHLIGHT:
+                            if (text.getSelection() != null){
+                                if (text.getSelectionStyle() == HIGHLIGHT){
+                                    text.applySelectionStyle(DEFAULT);
+                                } else {
+                                    text.applySelectionStyle(HIGHLIGHT);
+                                }
+                            } else {
+                                if (!on) {
+                                    //turn on
+                                    text.setHighlighting(true);
+                                    setImageResource(R.drawable.highlight_filled);
+                                    on = true;
+                                } else {
+                                    //turn off
+                                    text.setHighlighting(false);
+                                    setImageResource(R.drawable.highlight);
+                                    on = false;
+                                }
+                            }
+                            break;
                         case IMAGE:
                             EditView.instance.append(new Image(getContext()));
                             EditView.instance.append(new Text(getContext()));
@@ -158,6 +183,9 @@ public class ToolBar extends HorizontalScrollView {
                             break;
                         case ITEM:
                             EditView.instance.append(new Item(getContext()));
+                            break;
+                        case VOICE:
+                            EditView.instance.append(new Voice(getContext()));
                             break;
                         default:
                             break;
@@ -185,6 +213,7 @@ public class ToolBar extends HorizontalScrollView {
         public static final int FILE = 0x46;
         public static final int VOICE = 0x47;
         public static final int ITEM = 0x48;
+        public static final int HIGHLIGHT = 0x49;
         public static final int DEFAULT = 0x10;
     }
 }
