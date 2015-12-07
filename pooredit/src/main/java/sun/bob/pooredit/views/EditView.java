@@ -238,12 +238,14 @@ public class EditView extends LinearLayout {
                 case Constants.TYPE_TODO:
                     Todo todo = addTodoOn((int) Math.round((Double) bean.get("index")));
                     SpannableString ssTodo = new SpannableString(Html.fromHtml((String) bean.get("text")));
+                    populateAdditionalStyles(bean, ssTodo);
                     todo.setText(ssTodo);
                     todo.setChecked((Boolean) bean.get("checked"));
                     break;
                 case Constants.TYPE_ITEM:
                     Item item = addItemOn((int) Math.round((Double) bean.get("index")));
                     SpannableString ssItem = new SpannableString(Html.fromHtml((String) bean.get("text")));
+                    populateAdditionalStyles(bean, ssItem);
                     item.setText(ssItem);
                     break;
                 case Constants.TYPE_ATT:

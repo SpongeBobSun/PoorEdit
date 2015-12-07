@@ -3,6 +3,7 @@ package sun.bob.pooredit.views;
 import android.content.Context;
 import android.text.Html;
 import android.text.Spanned;
+import android.text.style.BackgroundColorSpan;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
@@ -87,8 +88,15 @@ public class Item extends BaseContainer {
         private int background;
         private long length;
 
+        private ArrayList<Integer> starts;
+        private ArrayList<Integer> ends;
+        private ArrayList<Integer> styles;
+
         public ItemBean() {
             super();
+            starts = new ArrayList<>();
+            ends = new ArrayList<>();
+            styles = new ArrayList<>();
         }
 
         @Override
@@ -102,6 +110,13 @@ public class Item extends BaseContainer {
         }
 
         public ItemBean setText(CharSequence text) {
+            //Save styles which html util can not handle.
+            Spanned spanned = (Spanned) text;
+            for (BackgroundColorSpan bg : spanned.getSpans(0, text.length(), BackgroundColorSpan.class)){
+                styles.add(ToolBar.StyleButton.HIGHLIGHT);
+                starts.add(spanned.getSpanStart(bg));
+                ends.add(spanned.getSpanEnd(bg));
+            }
             this.text = Html.toHtml((Spanned) text);
             return this;
         }
