@@ -21,6 +21,7 @@ I'm tring to make it look & feel like you are still in `Evernote`
 * Bold
 * Italic
 * Underline
+* Highlight
 * Images
 * File attachments
 * Todo lists
@@ -99,7 +100,6 @@ When you click those menu items, a json file located in `/sdcard/pooredit/debug/
 * Add voices.
 * Add handwritings
 * Font & Colors
-* Text backgrounds.
 
 #Why
 To be honest I always thinking about writing a rich text editor on Android. 
