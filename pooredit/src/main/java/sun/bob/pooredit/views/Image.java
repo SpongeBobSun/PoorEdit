@@ -68,6 +68,7 @@ public class Image extends BaseContainer {
                 onClickFunction(v);
             }
         });
+        this.setImageLoader(PoorEdit.imageLoaderItf);
     }
 
     public Image setImage(String image, int viewWidth){
@@ -144,7 +145,7 @@ public class Image extends BaseContainer {
 
     }
 
-    interface ImageLoaderItf {
+    public interface ImageLoaderItf {
         void loadImage(ImageView imageView, String image, int imageWidth);
     }
 

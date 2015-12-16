@@ -31,6 +31,7 @@ public class PoorEdit extends LinearLayout{
 
     PoorEditWidget poorEditWidget;
     public static BaseContainer picking;
+    public static Image.ImageLoaderItf imageLoaderItf = null;
     public PoorEdit(Context context) {
         super(context);
         initUI();
@@ -55,6 +56,10 @@ public class PoorEdit extends LinearLayout{
 
     public void loadJson(String where){
         poorEditWidget.loadJson(where);
+    }
+
+    public void setImageLoader(Image.ImageLoaderItf imageLoaderItf) {
+        this.imageLoaderItf = imageLoaderItf;
     }
 
     class PoorEditWidget extends ScrollView {

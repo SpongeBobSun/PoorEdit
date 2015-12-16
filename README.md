@@ -12,6 +12,8 @@ Buggy but almost there!
 #Screenshots
 I'm tring to make it look & feel like you are still in `Evernote`
 
+<img src='art/shot.gif' width='300'/>
+<br />
 <img src='art/shot1.png' width='300'/>
 <br />
 <img src='art/shot2.png' width='300'/>
@@ -93,6 +95,30 @@ Below is the complete import & export code in sample project.
 ```
 
 When you click those menu items, a json file located in `/sdcard/pooredit/debug/content.json` will be created / loaded.
+
+##ImageLoader Interface
+When adding images to PoorEdit, it may cause an OOM when images are too large or too many.
+
+So, I secured a image loader interface to let you using your favorite image loaders to manage the loading & caching process.
+
+You need to implement `ImageLoaderItf` and pass it to PoorEdit. Thus when PoorEdit need to decode or loading images, it will call this interface.
+
+By default, PoorEdit will call `ImageView.setImageBitmap` directly without any loading or caching control.
+
+```java
+    Image.ImageLoaderItf itf = new Image.ImageLoaderItf() {
+        @Override
+        public void loadImage(ImageView imageView, String image, int imageWidth) {
+			//call your image loader here.
+        }
+    };
+    
+    poorEdit.setImageLoader(itf);
+    //Do NOT use below code!
+    //poorEdit.imageLoaderItf = itf;
+    //I've noticed this is not a good design so it will be fixed soon!
+    //setImageLoader method will remains and the static ImageLoaderItf field is not guaranteed!
+```
 
 #Todos
 * UI tweaks.
