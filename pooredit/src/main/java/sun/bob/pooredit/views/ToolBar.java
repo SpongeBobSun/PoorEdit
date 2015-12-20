@@ -50,6 +50,9 @@ public class ToolBar extends HorizontalScrollView {
                     .setFunction(StyleButton.HIGHLIGHT)
                     .setImage(R.drawable.highlight));
             this.addView(new StyleButton(getContext())
+                    .setFunction(StyleButton.STROKE)
+                    .setImage(R.drawable.strikethrough));
+            this.addView(new StyleButton(getContext())
                     .setFunction(StyleButton.TODO)
                     .setImage(R.drawable.todo_list));
             this.addView(new StyleButton(getContext())
@@ -89,11 +92,7 @@ public class ToolBar extends HorizontalScrollView {
                     switch (function){
                         case BOLD:
                             if (text.getSelection() != null){
-                                if (text.getSelectionStyle() == BOLD){
-                                    text.applySelectionStyle(DEFAULT);
-                                } else {
-                                    text.applySelectionStyle(BOLD);
-                                }
+                                text.applySelectionStyle(BOLD);
                             } else {
                                 if (!on) {
                                     //turn on
@@ -110,11 +109,7 @@ public class ToolBar extends HorizontalScrollView {
                             break;
                         case ITALIC:
                             if (text.getSelection() != null){
-                                if (text.getSelectionStyle() == ITALIC){
-                                    text.applySelectionStyle(DEFAULT);
-                                } else {
-                                    text.applySelectionStyle(ITALIC);
-                                }
+                                text.applySelectionStyle(ITALIC);
                             } else {
                                 if (!on) {
                                     //turn on
@@ -131,11 +126,7 @@ public class ToolBar extends HorizontalScrollView {
                             break;
                         case UNDERLINE:
                             if (text.getSelection() != null){
-                                if (text.getSelectionStyle() == UNDERLINE){
-                                    text.applySelectionStyle(DEFAULT);
-                                } else {
-                                    text.applySelectionStyle(UNDERLINE);
-                                }
+                                text.applySelectionStyle(UNDERLINE);
                             } else {
                                 if (!on) {
                                     //turn on
@@ -152,11 +143,7 @@ public class ToolBar extends HorizontalScrollView {
                             break;
                         case HIGHLIGHT:
                             if (text.getSelection() != null){
-                                if (text.getSelectionStyle() == HIGHLIGHT){
-                                    text.applySelectionStyle(DEFAULT);
-                                } else {
-                                    text.applySelectionStyle(HIGHLIGHT);
-                                }
+                                text.applySelectionStyle(HIGHLIGHT);
                             } else {
                                 if (!on) {
                                     //turn on
@@ -167,6 +154,23 @@ public class ToolBar extends HorizontalScrollView {
                                     //turn off
                                     text.setHighlighting(false);
                                     setImageResource(R.drawable.highlight);
+                                    on = false;
+                                }
+                            }
+                            break;
+                        case STROKE:
+                            if (text.getSelection() != null){
+                                text.applySelectionStyle(STROKE);
+                            } else {
+                                if (!on) {
+                                    //turn on
+                                    text.setStroking(true);
+                                    setImageResource(R.drawable.strikethrough_filled);
+                                    on = true;
+                                } else {
+                                    //turn off
+                                    text.setStroking(false);
+                                    setImageResource(R.drawable.strikethrough);
                                     on = false;
                                 }
                             }
@@ -214,6 +218,7 @@ public class ToolBar extends HorizontalScrollView {
         public static final int VOICE = 0x47;
         public static final int ITEM = 0x48;
         public static final int HIGHLIGHT = 0x49;
+        public static final int STROKE = 0x50;
         public static final int DEFAULT = 0x10;
     }
 }

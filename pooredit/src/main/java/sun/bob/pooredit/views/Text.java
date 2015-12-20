@@ -11,6 +11,8 @@ import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextWatcher;
 import android.text.style.BackgroundColorSpan;
+import android.text.style.CharacterStyle;
+import android.text.style.StrikethroughSpan;
 import android.text.style.StyleSpan;
 import android.text.style.UnderlineSpan;
 import android.util.AttributeSet;
@@ -44,6 +46,7 @@ public class Text extends BaseContainer{
     private boolean italicing = false;
     private boolean underlining = false;
     private boolean highlighting = false;
+    private boolean stroking = false;
 
     private String selection;
     private int sStart = -2, sEnd = -2;
@@ -127,6 +130,10 @@ public class Text extends BaseContainer{
         return this;
     }
 
+    public void setStroking(boolean stroking) {
+        this.stroking = stroking;
+    }
+
     public String getSelection() {
         return selection;
     }
@@ -141,27 +148,90 @@ public class Text extends BaseContainer{
             return this;
         }
         boolean invalide = false;
-        switch (style){
-            case ToolBar.StyleButton.BOLD:
-                baseText.getText().setSpan(new StyleSpan(Typeface.BOLD), sStart, sEnd, Typeface.BOLD);
-                selectionStyle = ToolBar.StyleButton.BOLD;
+        Editable text = baseText.getText();
 
+        ArrayList<Integer> spans = new ArrayList();
+
+        //Get all existing spans here.
+        for (CharacterStyle cs : text.getSpans(sStart, sEnd, CharacterStyle.class)){
+            if (cs instanceof StyleSpan){
+                spans.add(((StyleSpan) cs).getStyle());
+            }
+            if (cs instanceof UnderlineSpan){
+                spans.add(ToolBar.StyleButton.UNDERLINE);
+            }
+            if (cs instanceof BackgroundColorSpan){
+                spans.add(ToolBar.StyleButton.HIGHLIGHT);
+            }
+            if (cs instanceof StrikethroughSpan){
+                spans.add(ToolBar.StyleButton.STROKE);
+            }
+
+        }
+        switch (style){
+            //Check existing spans to determine the operation is setting or deleting.
+            case ToolBar.StyleButton.BOLD:
+                if (!spans.contains(Typeface.BOLD)){
+                    text.setSpan(new StyleSpan(Typeface.BOLD), sStart, sEnd, Typeface.BOLD);
+                    selectionStyle = ToolBar.StyleButton.BOLD;
+                } else {
+                    for (CharacterStyle span : text.getSpans(sStart, sEnd, CharacterStyle.class)) {
+                        if (span instanceof StyleSpan && ((StyleSpan)span).getStyle() == Typeface.BOLD)
+                            text.removeSpan(span);
+                    }
+                }
                 break;
             case ToolBar.StyleButton.ITALIC:
-                baseText.getText().setSpan(new StyleSpan(Typeface.ITALIC), sStart, sEnd, Typeface.ITALIC);
-                selectionStyle = ToolBar.StyleButton.ITALIC;
+                if (!spans.contains(Typeface.ITALIC)){
+                    text.setSpan(new StyleSpan(Typeface.ITALIC), sStart, sEnd, Typeface.ITALIC);
+                    selectionStyle = ToolBar.StyleButton.ITALIC;
+                } else {
+                    for (CharacterStyle span : text.getSpans(sStart, sEnd, CharacterStyle.class)) {
+                        if (span instanceof StyleSpan && ((StyleSpan)span).getStyle() == Typeface.ITALIC)
+                            text.removeSpan(span);
+                    }
+                }
+
                 break;
             case ToolBar.StyleButton.DEFAULT:
-                baseText.getText().setSpan(null, sStart, sEnd, 0);
+                for (CharacterStyle span : text.getSpans(sStart, sEnd, CharacterStyle.class)) {
+                        text.removeSpan(span);
+                }
                 selectionStyle = ToolBar.StyleButton.DEFAULT;
                 break;
             case ToolBar.StyleButton.HIGHLIGHT:
-                baseText.getText().setSpan(new BackgroundColorSpan(Color.YELLOW), sStart, sEnd, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                selectionStyle = ToolBar.StyleButton.HIGHLIGHT;
+                if (!spans.contains(ToolBar.StyleButton.HIGHLIGHT)){
+                    text.setSpan(new BackgroundColorSpan(Color.YELLOW), sStart, sEnd, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    selectionStyle = ToolBar.StyleButton.HIGHLIGHT;
+                } else {
+                    for (CharacterStyle span : text.getSpans(sStart, sEnd, CharacterStyle.class)) {
+                        if (span instanceof BackgroundColorSpan)
+                            text.removeSpan(span);
+                    }
+                }
+
                 break;
             case ToolBar.StyleButton.UNDERLINE:
-                baseText.getText().setSpan(new UnderlineSpan(), sStart, sEnd, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                selectionStyle = ToolBar.StyleButton.HIGHLIGHT;
+                if (!spans.contains(ToolBar.StyleButton.UNDERLINE)) {
+                    text.setSpan(new UnderlineSpan(), sStart, sEnd, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    selectionStyle = ToolBar.StyleButton.HIGHLIGHT;
+                } else {
+                    for (CharacterStyle span : text.getSpans(sStart, sEnd, CharacterStyle.class)) {
+                        if (span instanceof UnderlineSpan)
+                            text.removeSpan(span);
+                    }
+                }
+                break;
+            case ToolBar.StyleButton.STROKE:
+                if (!spans.contains(ToolBar.StyleButton.STROKE)) {
+                    text.setSpan(new StrikethroughSpan(), sStart, sEnd, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    selectionStyle = ToolBar.StyleButton.STROKE;
+                } else {
+                    for (CharacterStyle span : text.getSpans(sStart, sEnd, CharacterStyle.class)) {
+                        if (span instanceof StrikethroughSpan)
+                            text.removeSpan(span);
+                    }
+                }
                 break;
             default:
                 invalide = true;
@@ -253,7 +323,7 @@ public class Text extends BaseContainer{
                 selectionStyle = -1;
                 return;
             }
-            boolean hasBold = false, hasItalic = false, hasBoth = false;
+            boolean hasBold = false, hasItalic = false, hasBoth = false, hasStroke = false;
             for (StyleSpan span : getText().getSpans(start, end, StyleSpan.class)){
                 if (span.getStyle() == Typeface.BOLD){
                     hasBold = true;
@@ -273,6 +343,9 @@ public class Text extends BaseContainer{
             }
             if (hasItalic){
                 selectionStyle = ToolBar.StyleButton.ITALIC;
+            }
+            if (hasStroke){
+                selectionStyle = ToolBar.StyleButton.STROKE;
             }
             try {
                 selection = String.valueOf(getText().subSequence(start, end));
@@ -325,6 +398,10 @@ public class Text extends BaseContainer{
                     }
                     if (highlighting){
                         ss.setSpan(new BackgroundColorSpan(Color.YELLOW), start, start + count, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                        BaseText.this.getEditableText().replace(0, s.length(), ss);
+                    }
+                    if (stroking){
+                        ss.setSpan(new StrikethroughSpan(), start, start + count, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                         BaseText.this.getEditableText().replace(0, s.length(), ss);
                     }
                 }
