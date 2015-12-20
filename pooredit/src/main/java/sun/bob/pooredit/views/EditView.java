@@ -9,7 +9,9 @@ import android.text.Html;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.style.BackgroundColorSpan;
+import android.text.style.StrikethroughSpan;
 import android.text.style.StyleSpan;
+import android.text.style.UnderlineSpan;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -269,6 +271,12 @@ public class EditView extends LinearLayout {
                 switch (style){
                     case ToolBar.StyleButton.HIGHLIGHT:
                         ss.setSpan(new BackgroundColorSpan(Color.YELLOW), gson2Int(starts.get(i)), gson2Int(ends.get(i)), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                        break;
+                    case ToolBar.StyleButton.UNDERLINE:
+                        ss.setSpan(new UnderlineSpan(), gson2Int(starts.get(i)), gson2Int(ends.get(i)), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                        break;
+                    case ToolBar.StyleButton.STROKE:
+                        ss.setSpan(new StrikethroughSpan(), gson2Int(starts.get(i)), gson2Int(ends.get(i)), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                         break;
                     default:
                         break;
