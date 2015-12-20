@@ -24,6 +24,7 @@ I'm tring to make it look & feel like you are still in `Evernote`
 * Italic
 * Underline
 * Highlight
+* Strike through
 * Images
 * File attachments
 * Todo lists
