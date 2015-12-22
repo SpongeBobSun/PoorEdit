@@ -117,6 +117,7 @@ public class PoorEdit extends LinearLayout{
                     break;
                 }
                 ((Image) picking).setImage(picPath, 0);
+
                 break;
             case Constants.REQ_PICK_FILE:
                 Uri selectedFile = data.getData();

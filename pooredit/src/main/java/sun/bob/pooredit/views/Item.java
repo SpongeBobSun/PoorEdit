@@ -4,6 +4,9 @@ import android.content.Context;
 import android.text.Html;
 import android.text.Spanned;
 import android.text.style.BackgroundColorSpan;
+import android.text.style.CharacterStyle;
+import android.text.style.StrikethroughSpan;
+import android.text.style.UnderlineSpan;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,7 +32,6 @@ public class Item extends BaseContainer {
     private LinearLayout container;
     private Dot dot;
     private Text text;
-    private boolean checked = false;
 
     public Item(Context context) {
         super(context);
@@ -112,10 +114,18 @@ public class Item extends BaseContainer {
         public ItemBean setText(CharSequence text) {
             //Save styles which html util can not handle.
             Spanned spanned = (Spanned) text;
-            for (BackgroundColorSpan bg : spanned.getSpans(0, text.length(), BackgroundColorSpan.class)){
-                styles.add(ToolBar.StyleButton.HIGHLIGHT);
-                starts.add(spanned.getSpanStart(bg));
-                ends.add(spanned.getSpanEnd(bg));
+            for (CharacterStyle style : spanned.getSpans(0, text.length(), CharacterStyle.class)){
+                if (style instanceof BackgroundColorSpan) {
+                    styles.add(ToolBar.StyleButton.HIGHLIGHT);
+                }
+                if (style instanceof UnderlineSpan){
+                    styles.add(ToolBar.StyleButton.UNDERLINE);
+                }
+                if (style instanceof StrikethroughSpan){
+                    styles.add(ToolBar.StyleButton.STROKE);
+                }
+                starts.add(spanned.getSpanStart(style));
+                ends.add(spanned.getSpanEnd(style));
             }
             this.text = Html.toHtml((Spanned) text);
             return this;
@@ -148,10 +158,6 @@ public class Item extends BaseContainer {
         public ItemBean setLength(long length) {
             this.length = length;
             return this;
-        }
-
-        public boolean isChecked() {
-            return checked;
         }
     }
 }

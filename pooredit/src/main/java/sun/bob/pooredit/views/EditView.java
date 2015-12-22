@@ -37,7 +37,7 @@ public class EditView extends LinearLayout {
 
     public static BaseContainer editing = null;
     protected static EditView instance;
-    public int currentIndex = 0;
+    public int currentIndex = -1;
     public EditView(Context context) {
         super(context);
         initUI();
@@ -101,6 +101,22 @@ public class EditView extends LinearLayout {
     }
     protected void append(BaseContainer e){
         boolean ensureText = false;
+        BaseContainer last = (BaseContainer) this.getChildAt(getChildCount() - 1);
+        if (e instanceof NumberItem){
+            if (currentIndex == -1){
+                if (last instanceof NumberItem){
+                    currentIndex = ((NumberItem) getChildAt(getChildCount() - 1)).getNum() + 1;
+                } else {
+                    currentIndex = 1;
+                }
+            } else {
+                currentIndex ++;
+            }
+            ((NumberItem) e).setNum(currentIndex);
+
+        } else {
+            currentIndex = -1;
+        }
         if ((! (getChildAt(getChildCount() - 1) instanceof Text)) && getChildCount() > 1){
             ensureText = true;
         }
@@ -116,7 +132,6 @@ public class EditView extends LinearLayout {
                 e.focus();
             }
         }
-        currentIndex++;
     }
 
     public String exportJSON(String where){
@@ -241,6 +256,8 @@ public class EditView extends LinearLayout {
                     Todo todo = addTodoOn((int) Math.round((Double) bean.get("index")));
                     SpannableString ssTodo = new SpannableString(Html.fromHtml((String) bean.get("text")));
                     populateAdditionalStyles(bean, ssTodo);
+                    //Why the hell there are to extra '\n' appended???
+                    ssTodo = (SpannableString) ssTodo.subSequence(0, ssTodo.length() - 2);
                     todo.setText(ssTodo);
                     todo.setChecked((Boolean) bean.get("checked"));
                     break;
@@ -248,6 +265,7 @@ public class EditView extends LinearLayout {
                     Item item = addItemOn((int) Math.round((Double) bean.get("index")));
                     SpannableString ssItem = new SpannableString(Html.fromHtml((String) bean.get("text")));
                     populateAdditionalStyles(bean, ssItem);
+                    ssItem = (SpannableString) ssItem.subSequence(0, ssItem.length() - 2);
                     item.setText(ssItem);
                     break;
                 case Constants.TYPE_ATT:

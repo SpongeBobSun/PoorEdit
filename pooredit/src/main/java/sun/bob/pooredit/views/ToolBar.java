@@ -58,6 +58,9 @@ public class ToolBar extends HorizontalScrollView {
             this.addView(new StyleButton(getContext())
                     .setFunction(StyleButton.ITEM)
                     .setImage(R.drawable.list));
+//            this.addView(new StyleButton(getContext())
+//                    .setFunction(StyleButton.NUM)
+//                    .setImage(R.drawable.numbered_list));
             this.addView(new StyleButton(getContext())
                     .setFunction(StyleButton.IMAGE)
                     .setImage(R.drawable.image_file));
@@ -191,6 +194,9 @@ public class ToolBar extends HorizontalScrollView {
                         case VOICE:
                             EditView.instance.append(new Voice(getContext()));
                             break;
+                        case NUM:
+                            EditView.instance.append(new NumberItem(getContext()));
+                            break;
                         default:
                             break;
                     }
@@ -219,6 +225,7 @@ public class ToolBar extends HorizontalScrollView {
         public static final int ITEM = 0x48;
         public static final int HIGHLIGHT = 0x49;
         public static final int STROKE = 0x50;
+        public static final int NUM = 0x51;
         public static final int DEFAULT = 0x10;
     }
 }
