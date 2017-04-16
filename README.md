@@ -1,15 +1,15 @@
-#PoorEdit
+# PoorEdit
 
 [![Android Arsenal](https://img.shields.io/badge/Android%20Arsenal-PoorEdit-green.svg?style=true)](https://android-arsenal.com/details/1/2870)
 
 Rich Text Editor for Android
 
-#Status
+# Status
 WIP. So those who forked this repo may need to merge my code manually.
 
 Buggy but almost there!
 
-#Screenshots
+# Screenshots
 I'm tring to make it look & feel like you are still in `Evernote`
 
 <img src='art/shot.gif' width='300'/>
@@ -18,7 +18,7 @@ I'm tring to make it look & feel like you are still in `Evernote`
 <br />
 <img src='art/shot2.png' width='300'/>
 
-#Features
+# Features
 * Basic text editing
 * Bold
 * Italic
@@ -32,8 +32,8 @@ I'm tring to make it look & feel like you are still in `Evernote`
 * JSON export
 * JSON import
 
-#Usage
-##Setup
+# Usage
+## Setup
 This project is still working in progress and I do NOT recommend using it in production env.
 
 After check out this repo, you will get a test project and `PoorEdit` widget is located in `pooredit` folder. Import this folder as module in Android Studio.
@@ -61,7 +61,7 @@ The reason for that is `PoorEdit` need to start image picking or file picking ac
 
 That's all you need to do to initialize a shinny tinny rich editor.
 
-##Export & Import
+## Export & Import
 PoorEdit support `json` export and import.
 
 You can take the sample project as reference or use below two functions.
@@ -97,7 +97,7 @@ Below is the complete import & export code in sample project.
 
 When you click those menu items, a json file located in `/sdcard/pooredit/debug/content.json` will be created / loaded.
 
-##ImageLoader Interface
+## ImageLoader Interface
 When adding images to PoorEdit, it may cause an OOM when images are too large or too many.
 
 So, I secured a image loader interface to let you using your favorite image loaders to manage the loading & caching process.
@@ -121,14 +121,14 @@ By default, PoorEdit will call `ImageView.setImageBitmap` directly without any l
     //setImageLoader method will remains and the static ImageLoaderItf field is not guaranteed!
 ```
 
-#Todos
+# Todos
 * UI tweaks.
 * Bug fix.
 * Add voices.
 * Add handwritings
 * Font & Colors
 
-#Why
+# Why
 To be honest I always thinking about writing a rich text editor on Android. 
 
 There are lots of brilliant projects on GitHub.
@@ -147,14 +147,14 @@ And I have to say to writing a complex widget like that is so hard for just one 
 
 So,
 
-###ANY PULL REQUSTS IS WELCOME!
-###THANKS IN ADVANCE!
+### ANY PULL REQUSTS IS WELCOME!
+### THANKS IN ADVANCE!
 
-#Credits
+# Credits
 Icons from [icons8.com](https://icons8.com/)
 
-#License
+# License
 
-###Good Boy License
+### Good Boy License
 
 Please do whatever your mom would approve of.
